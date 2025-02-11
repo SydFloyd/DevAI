@@ -73,7 +73,9 @@ def engage(assistant_id):
         interact(assistant_id, thread.id)
 
 def main():
-    assistant_id = "asst_ESqlAIO8s3GxJi0oQxf9ldrE"
+    with open("local/active_assistant.txt") as f:
+        assistant_id = f.read().strip()
+    print("Using assistant_id:", assistant_id)
     engage(assistant_id)
 
 if __name__ == "__main__":

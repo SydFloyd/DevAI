@@ -50,9 +50,30 @@ write_file_tool = {
     }
 }
 
+delete_file_tool = {
+    "type": "function",
+    "function": {
+        "name": "delete_file",
+        "description": "Deletes a file at the specified file path.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "Path of the file to be deleted."
+                }
+            },
+            "required": ["file_path"],
+            "additionalProperties": False
+        },
+        "strict": True
+    }
+}
+
 
 dev_tools = [
     directory_tool,
     read_file_tool,
     write_file_tool,
+    delete_file_tool,
 ]
