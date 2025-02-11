@@ -66,7 +66,7 @@ def output_messages(run, thread_id):
         for message in messages:
             print(message.role + ":")
             for c in message.content:
-                print(c.type + ": ", c.text.value)
+                print(c.text.value)
             break
     else:
         print(run.status)

@@ -70,10 +70,35 @@ delete_file_tool = {
     }
 }
 
+rename_move_file_tool = {
+    "type": "function",
+    "function": {
+        "name": "rename_move_file",
+        "description": "Renames or moves a file from source_path to destination_path.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "source_path": {
+                    "type": "string",
+                    "description": "The path of the file to be moved or renamed."
+                },
+                "destination_path": {
+                    "type": "string",
+                    "description": "The new path for the file."
+                }
+            },
+            "required": ["source_path", "destination_path"],
+            "additionalProperties": False
+        },
+        "strict": True
+    }
+}
+
 
 dev_tools = [
     directory_tool,
     read_file_tool,
     write_file_tool,
     delete_file_tool,
+    rename_move_file_tool,
 ]
