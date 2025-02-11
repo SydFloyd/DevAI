@@ -1,3 +1,21 @@
+"""
+main.py
+
+This module provides the main entry point for the client interaction system using the OpenAI utilities. 
+It handles the execution of dynamically loaded tools, processes user inputs, and manages interactions through a client-server model. 
+Key functions in this module facilitate the execution of configured tools and provide a loop for continuous user interaction.
+
+Functions:
+- execute_tools(run): Executes tool functions based on the 'run' configuration and returns the tool outputs.
+- submit_tools_and_get_run(run, tool_outputs, thread_id): Submits the results of tool execution to the client and polls for updates on the run status.
+- interact(assistant_id, thread_id): Manages the interactive session, collecting user input and coordinating tool execution.
+- output_messages(run, thread_id): Outputs messages from the completed interaction session.
+- engage(assistant_id): Initiates and maintains an interactive session loop with a given assistant configuration.
+- main(): Sets up and initializes the assistant interaction using configuration settings from 'cfg'.
+
+This module requires the 'src.openai_utils' and 'src.config.cfg' to provide necessary configurations and utilities for client interactions.
+"""
+
 from src.openai_utils import *
 from src.config import cfg
 import importlib
