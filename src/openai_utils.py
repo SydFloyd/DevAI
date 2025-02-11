@@ -1,5 +1,5 @@
 from openai import OpenAI
-from config import cfg
+from src.config import cfg
 
 def get_client():
 	client = OpenAI(		
@@ -11,7 +11,7 @@ def get_client():
 def create_assistant():
 	'''New assistant is created whenever toolset is expanded.'''
 
-	from utils.tools_schema import dev_tools
+	from tools_schema import dev_tools
 
 	client = get_client()
 

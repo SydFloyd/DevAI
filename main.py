@@ -1,5 +1,5 @@
-from src.openai_tools import *
-from config import cfg
+from src.openai_utils import *
+from src.config import cfg
 import importlib
 import json
 
@@ -12,7 +12,7 @@ def execute_tools(run):
             function_name = tool.function.name
             function_args = tool.function.arguments
             try:
-                tools_module = importlib.import_module("src.utils.tools_functions")
+                tools_module = importlib.import_module(f"src.tools.{function_name}")
                 tool_function = getattr(tools_module, function_name)
                 if isinstance(function_args, str):
                     function_args = json.loads(function_args)  # Convert string to dict
