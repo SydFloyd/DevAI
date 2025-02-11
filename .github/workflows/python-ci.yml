@@ -1,0 +1,32 @@
+name: Python CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the code from the repo
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up a Python version (e.g., 3.9)
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
+      # Step 3: Install dependencies from requirements.txt
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Step 4: Run tests using pytest
+      - name: Run tests
+        run: |
+          pytest

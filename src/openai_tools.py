@@ -2,7 +2,7 @@ from openai import OpenAI
 
 def get_client():
 	try:
-		with open("key.txt", "r") as f:
+		with open("local/key.txt", "r") as f:
 			openai_key = f.read().strip()
 		assert openai_key != None
 	except:
@@ -29,7 +29,3 @@ def create_assistant():
 	)
 
 	print(f"Created assistant {assistant.id}")
-
-def create_thread():
-	client = get_client()
-	
