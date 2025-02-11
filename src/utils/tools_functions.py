@@ -13,7 +13,7 @@ def build_directory_tree(start_path=".", exclude_dirs=None):
     """
     print("build_directory_tree function called.")
     if exclude_dirs is None:
-        exclude_dirs = [".venv", ".git", "__pycache__", "key.txt"]  # Default to excluding .venv
+        exclude_dirs = [".venv", ".git", "__pycache__", "local"]  # Default to excluding .venv
 
     lines = []
 
@@ -66,7 +66,7 @@ def read_file(file_path: str, project_root: str = ".") -> str:
     :raises FileNotFoundError: If the file does not exist.
     :raises IsADirectoryError: If the path points to a directory instead of a file.
     """
-    print("read_file function called.")
+    print(f"read_file function called on {file_path}.")
     # Resolve the full, absolute path of both project_root and the target file.
     root_path = Path(project_root).resolve()
     target_path = (root_path / file_path).resolve()
@@ -96,7 +96,7 @@ def write_file(file_path: str, new_content: str, project_root: str = ".") -> Non
     :raises ValueError: If the resolved file path is outside the project_root.
     :raises IsADirectoryError: If the path is a directory.
     """
-    print("write_file function called.")
+    print(f"write_file function called, wrote {len(new_content)} chars to {file_path}.")
     # Resolve the full, absolute path of both project_root and the target file.
     root_path = Path(project_root).resolve()
     target_path = (root_path / file_path).resolve()
@@ -115,3 +115,6 @@ def write_file(file_path: str, new_content: str, project_root: str = ".") -> Non
     # Write (overwrite) the file with new_content.
     with open(target_path, "w", encoding="utf-8") as f:
         f.write(new_content)
+
+if __name__ == "__main__":
+    print(build_directory_tree())
