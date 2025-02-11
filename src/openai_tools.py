@@ -1,15 +1,9 @@
 from openai import OpenAI
+from config import cfg
 
 def get_client():
-	try:
-		with open("local/key.txt", "r") as f:
-			openai_key = f.read().strip()
-		assert openai_key != None
-	except:
-		raise ValueError("Couldn't resolve openai api key")
-
-	client = OpenAI(
-		api_key = openai_key
+	client = OpenAI(		
+		api_key = cfg.openai_api_key
 	)
 
 	return client
