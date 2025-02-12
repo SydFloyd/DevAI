@@ -42,10 +42,10 @@ def build_directory_tree(start_path=".", exclude_dirs=None):
     def _build_tree(current_path, prefix=""):
         try:
             entries = sorted(os.listdir(current_path))
-        except PermissionError:
+        except PermissionError as e:
             # If permission denied, indicate and return
-            lines.append(prefix + "└── [Permission Denied]")
-            return
+            lines.append(prefix + "\u2514\u2500\u2500 [Permission Denied]")
+            return {"error": str(e)}
         
         # Filter out any directories that should be excluded
         filtered_entries = []
@@ -61,8 +61,8 @@ def build_directory_tree(start_path=".", exclude_dirs=None):
             
             # Check if this is the last item in the directory to adjust symbols
             is_last_item = (index == len(filtered_entries) - 1)
-            branch_symbol = "└── " if is_last_item else "├── "
-            extension_prefix = "    " if is_last_item else "│   "
+            branch_symbol = "\u2514\u2500\u2500 " if is_last_item else "\u251c\u2500\u2500 "
+            extension_prefix = "    " if is_last_item else "\u2502   "
 
             lines.append(prefix + branch_symbol + entry)
 

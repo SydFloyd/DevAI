@@ -30,7 +30,7 @@ def delete_assistant(assistant_id):
 def create_assistant():
 	'''New assistant is created whenever toolset is expanded.'''
 
-	from tools_schema import dev_tools
+	from src.tools_schema import dev_tools
 
 	client = get_client()
 
