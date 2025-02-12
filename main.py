@@ -55,7 +55,7 @@ def submit_tools_and_get_run(run, tool_outputs, thread_id):
         return run
 
 def interact(assistant_id, thread_id):
-    query = input("\nDeveloper Assistant>>")
+    query = input(f"\n{cfg.agent_name}>> ")
     message = client.beta.threads.messages.create(
         thread_id=thread_id,
         role="user",

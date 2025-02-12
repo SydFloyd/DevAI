@@ -22,6 +22,8 @@ class config:
         self.openai_api_key = os.environ.get("OPENAI_API_KEY")
         assert self.openai_api_key is not None, "API key cannot be resolved, please check environment config"
         
-        self.active_assistant_id = "asst_7j8G29hdxHBwHf4imZRlgfGj"
+        self.active_assistant_id = "asst_YnUjykkA0QWoHH5Xj0XrNilD"
+
+        self.agent_name = "DevAI"
 
 cfg = config()

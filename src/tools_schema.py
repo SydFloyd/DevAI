@@ -94,6 +94,26 @@ rename_move_file_tool = {
     }
 }
 
+read_docstring_tool = {
+    "type": "function",
+    "function": {
+        "name": "read_docstring",
+        "description": "Reads the top-level docstring from a given Python file.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "Path of the Python file to read the docstring from."
+                }
+            },
+            "required": ["file_path"],
+            "additionalProperties": False
+        },
+        "strict": True
+    }
+}
+
 
 dev_tools = [
     directory_tool,
@@ -101,4 +121,5 @@ dev_tools = [
     write_file_tool,
     delete_file_tool,
     rename_move_file_tool,
+    read_docstring_tool
 ]
