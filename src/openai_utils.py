@@ -1,17 +1,18 @@
 """
 openai_utils.py
 
-This module handles the utility functions related to OpenAI client interactions. It provides functions to create and manage OpenAI client instances, as well as assistants used in development operations.
+This module provides utility functions for managing OpenAI client interactions. Functions include client initialization and assistant creation, tailored for development tasks.
 
 Functions:
-- get_client(): Initializes and returns an OpenAI client instance configured with the necessary API key.
-- create_assistant(): Creates a new assistant instance using specified instructions and tools, beneficial when expanding the toolset for enhanced functionalities.
+- get_client(): Sets up and returns an OpenAI client instance using the configured API key.
+- delete_assistant(assistant_id): Deletes an assistant instance identified by 'assistant_id'.
+- create_assistant(): Creates a new assistant using specified tools and instructions, ideal for task automation.
 
 Dependencies:
-- Requires access to the 'cfg' object from 'config' to fetch OpenAI configuration settings.
+Accesses the 'cfg' configuration object to fetch OpenAI-related settings.
 
 Example Usage:
-To create a new assistant, simply run this module as a script to invoke 'create_assistant' with preset instructions.
+Run as a standalone script to create a new assistant with preset instructions and tool configurations.
 """
 from openai import OpenAI
 from src.config import cfg
@@ -28,8 +29,6 @@ def delete_assistant(assistant_id):
 	print(f"Deleted assistant {assistant_id}")
 
 def create_assistant():
-	'''New assistant is created whenever toolset is expanded.'''
-
 	from src.tools_schema import dev_tools
 
 	client = get_client()
