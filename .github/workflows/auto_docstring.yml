@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  process_files:
+  auto_document:
     runs-on: ubuntu-latest
 
     steps:
