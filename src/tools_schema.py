@@ -121,5 +121,5 @@ dev_tools = [
     write_file_tool,
     delete_file_tool,
     rename_move_file_tool,
-    read_docstring_tool
+    read_docstring_tool,
 ]

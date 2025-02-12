@@ -90,9 +90,13 @@ def output_messages(run, thread_id):
         print(run.status)
 
 def engage(assistant_id):
+    assistant_id = create_assistant()
     thread = client.beta.threads.create()
-    while True:
-        interact(assistant_id, thread.id)
+    try:
+        while True:
+            interact(assistant_id, thread.id)
+    finally:
+        delete_assistant(assistant_id)
 
 def main():
     print("Using assistant_id:", cfg.active_assistant_id)
