@@ -11,7 +11,7 @@ Main Function:
 
 Parameters:
 - start_path (str, optional): The path at which to start building the directory tree. Defaults to the current directory.
-- exclude_dirs (list, optional): Directories to exclude from the tree. Defaults to ['.venv', '.git', '__pycache__'] if not provided.
+- exclude_dirs (list, optional): Directories to exclude from the tree. Defaults to ['.venv', '.git', '__pycache__', 'auto_doc'] if not provided.
 
 Returns:
 - str: A multi-line string representing the directory tree.
@@ -32,7 +32,7 @@ import os
 def build_directory_tree(start_path=".", exclude_dirs=None):
     print("build_directory_tree function called.")
     if exclude_dirs is None:
-        exclude_dirs = [".venv", ".git", "__pycache__"]  # Default to excluding .venv
+        exclude_dirs = [".venv", ".git", "__pycache__", "auto_doc"]  # Default exclusions
 
     lines = []
 
