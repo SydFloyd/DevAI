@@ -18,10 +18,14 @@ jobs:
       - name: Fetch Changed Files
         id: changed-files
         run: |
-          git fetch origin master
-          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
+          if git rev-parse HEAD^ >/dev/null 2>&1; then
+            CHANGED_FILES=$(git diff --name-only HEAD^ HEAD | tr '\n' ' ')
+          else
+            CHANGED_FILES=$(git ls-files | tr '\n' ' ')  # Handle first commit
+          fi
           echo "Changed files: $CHANGED_FILES"
           echo "files=$CHANGED_FILES" >> $GITHUB_ENV
+
 
       - name: Run Custom File Processor
         uses: SydFloyd/AutoDocumenter@master
