@@ -35,6 +35,11 @@ jobs:
           files: ${{ env.files }}
           secret: ${{ secrets.OPENAI_API_KEY }}
 
+      - name: Debug File Changes
+        run: |
+          echo "Checking if main.py changed..."
+          git diff main.py || echo "No changes detected in main.py"
+
       - name: Commit and Push Changes
         run: |
           git config --global user.name "github-actions[bot]"
