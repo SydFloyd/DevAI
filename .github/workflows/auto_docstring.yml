@@ -42,8 +42,6 @@ jobs:
         with:
           files: ${{ env.files }}
           secret: ${{ secrets.OPENAI_API_KEY }}
-        env:
-          GITHUB_WORKSPACE: ${{ github.workspace }}
 
       - name: Commit and Push Changes
         run: |
