@@ -30,7 +30,7 @@ jobs:
           echo "files=$CHANGED_FILES" >> $GITHUB_ENV
 
 
-      - name: Run Custom File Processor
+      - name: Auto Docstring
         uses: SydFloyd/AutoDocumenter@master
         with:
           files: ${{ env.files }}
