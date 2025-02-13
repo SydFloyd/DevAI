@@ -29,14 +29,6 @@ jobs:
           echo "Changed files: $CHANGED_FILES"
           echo "files=$CHANGED_FILES" >> $GITHUB_ENV
 
-      - name: Debug workspace
-        run: |
-          echo "Current directory: $(pwd)"
-          echo "Listing files in workspace:"
-          ls -lah $GITHUB_WORKSPACE
-          echo "Checking entrypoint.sh:"
-          cat $GITHUB_WORKSPACE/entrypoint.sh || echo "entrypoint.sh is missing!"
-
       - name: Auto Docstring
         uses: SydFloyd/AutoDocumenter@master
         with:
