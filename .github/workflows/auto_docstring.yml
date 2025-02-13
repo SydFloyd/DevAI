@@ -29,6 +29,8 @@ jobs:
           echo "Changed files: $CHANGED_FILES"
           echo "files=$CHANGED_FILES" >> $GITHUB_ENV
 
+      - name: Debug workspace contents
+        run: ls -lah /github/workspace
 
       - name: Auto Docstring
         uses: SydFloyd/AutoDocumenter@master
