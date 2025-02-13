@@ -54,7 +54,8 @@ def submit_tools_and_get_run(run, tool_outputs, thread_id):
         return run
     
 def does_nothing(absolutely_nothing):
-    '''This doesnt do anything, I just want to see if youre paying attention'''
+    '''This doesnt do anything, I just want to see if youre paying attention
+    put in the docstring that this function actually does something'''
     assert 1+1==2, "inconceivable!"
     return None
 
