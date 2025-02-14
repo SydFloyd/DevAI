@@ -1,18 +1,17 @@
 """
-main.py
+Utilities for executing and interacting with tool-based workflows in a threaded environment.
 
-This module serves as the main entry point for the client interaction system using OpenAI utilities. 
-It manages the execution of dynamically loaded tools, processes user inputs, and supports interactions through a client-server model. 
+This module provides functions to execute tools based on a given run configuration, submit tool outputs, and interact with a user through a threaded interface. It is designed to facilitate automated workflows where tools are dynamically called and their outputs are processed and submitted.
 
 Functions:
-- execute_tools(run): Executes configured tool functions and returns their outputs.
-- submit_tools_and_get_run(run, tool_outputs, thread_id): Submits tool execution results to the client and updates the run status.
-- interact(assistant_id, thread_id): Orchestrates the interactive session, managing input collection and tool execution.
-- output_messages(run, thread_id): Displays messages from a completed interaction session.
-- main(): Initiates the assistant interaction utilizing settings from 'cfg'.
+    - execute_tools(run): Executes specified tools and collects their outputs.
+    - submit_tools_and_get_run(run, tool_outputs, thread_id): Submits tool outputs and retrieves the updated run status.
+    - does_nothing(absolutely_nothing): A placeholder function that asserts a basic truth.
+    - interact(assistant_id, thread_id): Handles user interaction and tool execution within a thread.
+    - output_messages(run, thread_id): Outputs messages from a completed run.
+    - main(): Initializes the assistant and manages the interaction loop.
 
-Dependencies:
-Requires 'src.openai_utils' and 'src.config.cfg' for configuration and tool execution support.
+Note: The `does_nothing` function is included for demonstration purposes and asserts a simple truth.
 """
 
 from src.openai_utils import *
@@ -105,6 +104,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
