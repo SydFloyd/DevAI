@@ -27,3 +27,4 @@ def read_docstring(file_path: str, project_root: str = ".") -> dict:
         return {"docstring": ast.get_docstring(module_ast) or ""}
     except Exception as e:
         return {"error": str(e)}
+

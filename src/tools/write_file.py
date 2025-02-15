@@ -24,3 +24,4 @@ def write_file(file_path: str, new_content: str, project_root: str = ".") -> dic
         return {"success": True}
     except Exception as e:
         return {"error": str(e)}
+

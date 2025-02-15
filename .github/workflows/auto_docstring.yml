@@ -22,23 +22,21 @@ jobs:
         id: changed-files
         run: |
           if git rev-parse HEAD^ >/dev/null 2>&1; then
-            CHANGED_FILES=$(git diff --name-only HEAD^ HEAD | tr '\n' ' ')
+            CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
           else
-            CHANGED_FILES=$(git ls-files | tr '\n' ' ')  # Handle first commit
+            CHANGED_FILES=$(git ls-files)  # Handle first commit
           fi
-          echo "Changed files: $CHANGED_FILES"
-          echo "files=$CHANGED_FILES" >> $GITHUB_ENV
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+          echo "files<<EOF" >> $GITHUB_ENV
+          echo "$CHANGED_FILES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Auto Docstring
         uses: SydFloyd/AutoDocumenter@master
         with:
           files: ${{ env.files }}
           secret: ${{ secrets.OPENAI_API_KEY }}
-
-      - name: Debug File Changes
-        run: |
-          echo "Checking if main.py changed..."
-          git diff main.py || echo "No changes detected in main.py"
 
       - name: Commit and Push Changes
         run: |

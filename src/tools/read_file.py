@@ -23,3 +23,4 @@ def read_file(file_path: str, project_root: str = ".") -> dict:
 
     except Exception as e:
         return {"error": str(e)}
+
