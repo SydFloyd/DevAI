@@ -1,20 +1,20 @@
 """
 Utilities for managing tool-based workflows with OpenAI's API using threading.
 
-This module facilitates the automation of workflows by dynamically invoking tools, processing their outputs, and managing interactions with the OpenAI API. It includes functions for creating and deleting assistants, executing tools based on a given run configuration, and handling user interactions through a threaded interface. The `client` is initialized globally to maintain a persistent connection with the OpenAI API, and the module leverages threading to manage interactions efficiently.
+This module automates workflows by dynamically invoking tools, processing their outputs, and managing interactions with the OpenAI API. It includes functions for creating and deleting assistants, executing tools based on a given run configuration, and handling user interactions through a threaded interface. The `get_client()` function initializes the OpenAI client, which is used globally to maintain a persistent connection with the API. Threading is utilized to efficiently manage interactions, allowing for concurrent execution and response handling.
 
 Functions:
     - get_client() -> OpenAI: Initializes and returns an OpenAI client using the configured API key.
-    - delete_assistant(assistant_id): Deletes an assistant using its ID.
+    - delete_assistant(assistant_id: str): Deletes an assistant using its ID.
     - create_assistant() -> str: Creates a new assistant with specified instructions, tools, and model "gpt-4o", returning its ID.
     - execute_tools(run) -> List[Dict]: Executes tools specified in a run configuration and collects their outputs.
-    - submit_tools_and_get_run(run, tool_outputs, thread_id) -> Run: Submits tool outputs and retrieves the updated run status.
-    - interact(assistant_id, thread_id): Manages user interaction and tool execution within a thread.
-    - output_messages(run, thread_id): Displays messages from a completed run.
-    - main(): Initializes the assistant, creates a thread using `client.beta.threads.create()`, manages the interaction loop, and ensures cleanup of resources.
+    - submit_tools_and_get_run(run, tool_outputs: List[Dict], thread_id: str) -> Run: Submits tool outputs and retrieves the updated run status.
+    - interact(assistant_id: str, thread_id: str): Manages user interaction and tool execution within a thread.
+    - output_messages(run, thread_id: str): Lists messages from a thread if the run is completed.
+    - main(): Initializes the assistant, creates a thread, runs an infinite loop for interaction, and ensures cleanup of resources.
 
 Exceptions:
-    - General exceptions during tool execution and submission are caught and logged for troubleshooting, including errors in executing tool functions and failures in submitting tool outputs.
+    - General exceptions during tool execution and submission are caught and logged for troubleshooting, including errors in executing tool functions and failures in submitting tool outputs. Specific exceptions are not listed, but users should be aware of potential issues related to API connectivity and tool execution errors.
 """
 
 from openai import OpenAI
@@ -127,6 +127,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
 
 
 
