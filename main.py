@@ -1,16 +1,16 @@
 """
-Utilities for managing tool-based workflows with OpenAI's API using threading.
+Utilities for managing and automating tool-based workflows with OpenAI's API.
 
-This module automates workflows by dynamically invoking tools, processing their outputs, and managing interactions with the OpenAI API. It includes functions for creating and deleting assistants, executing tools based on a given run configuration, and handling user interactions through a threaded interface. The `get_client()` function initializes the OpenAI client, which is used globally to maintain a persistent connection with the API. Threading is utilized to efficiently manage interactions, allowing for concurrent execution and response handling.
+This module facilitates the creation and management of AI assistants by dynamically invoking tools, processing their outputs, and handling interactions with the OpenAI API. It supports creating and deleting assistants, executing tools based on a given run configuration, and managing user interactions through a threaded interface. Threading is utilized to efficiently manage interactions, allowing for concurrent execution and response handling.
 
 Functions:
-    - get_client() -> OpenAI: Initializes and returns an OpenAI client using the configured API key.
+    - get_client() -> OpenAI: Initializes and returns a new OpenAI client using the configured API key.
     - delete_assistant(assistant_id: str): Deletes an assistant using its ID.
     - create_assistant() -> str: Creates a new assistant with specified instructions, tools, and model "gpt-4o", returning its ID.
     - execute_tools(run) -> List[Dict]: Executes tools specified in a run configuration and collects their outputs.
     - submit_tools_and_get_run(run, tool_outputs: List[Dict], thread_id: str) -> Run: Submits tool outputs and retrieves the updated run status.
     - interact(assistant_id: str, thread_id: str): Manages user interaction and tool execution within a thread.
-    - output_messages(run, thread_id: str): Lists messages from a thread if the run is completed.
+    - output_messages(run, thread_id: str): Lists messages from a thread if the run is completed; otherwise, prints the current run status.
     - main(): Initializes the assistant, creates a thread, runs an infinite loop for interaction, and ensures cleanup of resources.
 
 Exceptions:
@@ -128,6 +128,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
 
 
 

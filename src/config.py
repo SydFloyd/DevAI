@@ -1,10 +1,16 @@
 """
 Configuration settings for initializing the application environment.
 
-This module defines a `config` class responsible for managing the retrieval of configuration settings, such as the OpenAI API key from environment variables. It also sets a default name and predefined instructions for an assistant agent, which describe the agent's role as a senior software developer and guide user interaction.
+This module defines a `Config` class responsible for managing configuration settings, such as retrieving the OpenAI API key from environment variables. It sets a default name and predefined instructions for an assistant agent, describing the agent's role as a senior software developer and guiding user interaction. The module also includes a method to generate a system message for the agent, providing context about the codebase environment.
 
 Classes:
-    - config: Manages application configuration settings, including API key retrieval, default agent name, and assistant instructions.
+    - Config: Manages application configuration settings, including API key retrieval, default agent name, and assistant instructions.
+
+Functions:
+    - get_sys_message() -> str: Provides a system message with context about the codebase, enhancing the agent's effectiveness.
+
+Exceptions:
+    - AssertionError: Raised when the OpenAI API key is not found in the environment variables.
 """
 
 import os
@@ -38,6 +44,9 @@ class config:
         return system_message
 
 cfg = config()
+
+
+
 
 
 
