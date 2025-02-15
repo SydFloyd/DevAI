@@ -1,31 +1,3 @@
-"""
-build_directory_tree.py
-
-This module provides functionality to generate an ASCII representation of a directory structure starting from a specified root directory. The tool is useful for visualizing the hierarchy of files and folders.
-
-Functionality:
-- Recursively traverses directories, skipping specified subdirectories, and returns a visual directory tree as a string.
-
-Main Function:
-- build_directory_tree(start_path=".", exclude_dirs=None): Constructs and returns the directory tree representation starting from the given path.
-
-Parameters:
-- start_path (str, optional): The path at which to start building the directory tree. Defaults to the current directory.
-- exclude_dirs (list, optional): Directories to exclude from the tree. Defaults to ['.venv', '.git', '__pycache__'] if not provided.
-
-Returns:
-- str: A multi-line string representing the directory tree.
-
-Raises:
-- PermissionError: Indicates paths that cannot be accessed due to insufficient permissions with a placeholder in the output.
-
-Example Usage:
-Directly call build_directory_tree with desired parameters to get the directory structure as a string.
-
-Note:
-The function logs to console when called, which can be removed or modified based on runtime requirements.
-"""
-
 import os
 
 def build_directory_tree(start_path=".", exclude_dirs=None):

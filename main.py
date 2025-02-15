@@ -10,14 +10,38 @@ Functions:
     - interact(assistant_id, thread_id): Handles user interaction and tool execution within a thread.
     - output_messages(run, thread_id): Outputs messages from a completed run.
     - main(): Initializes the assistant and manages the interaction loop.
-
-Note: The `does_nothing` function is included for demonstration purposes and asserts a simple truth.
 """
 
-from src.openai_utils import *
+from openai import OpenAI
 from src.config import cfg
 import importlib
 import json
+
+def get_client():
+	client = OpenAI(
+		api_key = cfg.openai_api_key
+	)
+	return client
+
+def delete_assistant(assistant_id):
+	client = get_client()
+	client.beta.assistants.delete(assistant_id)
+	print(f"Deleted assistant {assistant_id}")
+
+def create_assistant():
+	from src.tools_schema import dev_tools
+
+	client = get_client()
+
+	assistant = client.beta.assistants.create(
+		instructions=cfg.ASSISTANT_INSTRUCTIONS,
+		name="Developer of DevAI",
+		tools=[{"type": "code_interpreter"}, *dev_tools],
+		model="gpt-4o",
+	)
+	print(f"Created assistant {assistant.id}")
+
+	return assistant.id
 
 client = get_client()
 
@@ -51,12 +75,6 @@ def submit_tools_and_get_run(run, tool_outputs, thread_id):
     except Exception as e:
         print("Failed to submit tool outputs:", e)
         return run
-    
-def does_nothing(absolutely_nothing):
-    '''This doesnt do anything, I just want to see if youre paying attention
-    put in the docstring that this function actually does something'''
-    assert 1+1==2, "inconceivable!"
-    return None
 
 def interact(assistant_id, thread_id):
     query = input(f"\n{cfg.agent_name}>> ")
@@ -104,9 +122,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-

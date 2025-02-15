@@ -1,31 +1,3 @@
-"""
-read_docstring.py
-
-This module provides functionality to extract the top-level docstring from a specified Python file within a project.
-This is especially useful for quickly accessing module documentation or generating summaries.
-
-Functionality:
-- Reads and returns the first docstring found at the start of Python files, respecting project boundaries.
-
-Main Function:
-- read_docstring(file_path: str, project_root: str = "."): Extracts the top-level docstring from the given file path.
-
-Parameters:
-- file_path (str): The path to the Python file from which the docstring will be extracted. It can be relative to the project root.
-- project_root (str, optional): The root directory within which the file must reside. Defaults to the current directory.
-
-Returns:
-- str: The extracted docstring or an empty string if no docstring is found.
-
-Raises:
-- ValueError: If the resolved file path is outside the project root.
-- FileNotFoundError: If the file does not exist.
-- IsADirectoryError: If the specified path is a directory instead of a file.
-
-Example Usage:
-Call read_docstring with the desired file path to quickly access module-level documentation.
-"""
-
 from pathlib import Path
 import ast
 
