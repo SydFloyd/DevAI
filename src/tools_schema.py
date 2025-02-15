@@ -1,15 +1,20 @@
 """
 File and directory management utilities.
 
-This module offers a suite of functions for performing operations on files and directories, including reading, writing, deleting, renaming, and displaying directory structures. It also provides functionality to extract docstrings from Python files, making it useful for development and file manipulation tasks.
+This module offers a suite of functions for performing operations on files and directories,
+including reading, writing, deleting, renaming, and displaying directory structures. It also
+provides functionality to extract docstrings from Python files, making it useful for
+development and file manipulation tasks.
 
 Functions:
     - build_directory_tree: Displays the directory tree of the project directory.
     - read_file(file_path: str) -> str: Reads the contents of a file at the specified path.
     - write_file(file_path: str, new_content: str): Writes or overwrites a file with new content.
     - delete_file(file_path: str): Deletes a file at the specified file path.
-    - rename_move_file(source_path: str, destination_path: str): Renames or moves a file from a source path to a destination path.
-    - read_docstring(file_path: str) -> str: Reads the top-level docstring from a given Python file.
+    - rename_move_file(source_path: str, destination_path: str): Renames or moves a file from a
+      source path to a destination path.
+    - read_docstring(file_path: str) -> str: Reads the top-level docstring from a given Python
+      file.
 """
 
 directory_tool = {
@@ -128,6 +133,25 @@ read_docstring_tool = {
     }
 }
 
+execute_command_tool = {
+    "type": "function",
+    "function": {
+        "name": "execute_command",
+        "description": "Executes a command on the machine after getting user approval.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "command": {
+                    "type": "string",
+                    "description": "The command to execute on the machine."
+                }
+            },
+            "required": ["command"],
+            "additionalProperties": False
+        },
+        "strict": True
+    }
+}
 
 dev_tools = [
     directory_tool,
@@ -136,6 +160,5 @@ dev_tools = [
     delete_file_tool,
     rename_move_file_tool,
     read_docstring_tool,
+    execute_command_tool,
 ]
-
-

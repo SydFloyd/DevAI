@@ -30,6 +30,7 @@ class config:
         system_message = (
             "You are contributing to a codebase on a Windows machine.\n"
             "Use the tools you are provided to the fullest extent to maximize your effect.\n"
+            "write_file tool will provide linting feedback only for .py files.\n"
             "Read src/tools/ADDING_NEW_TOOLS.md before updating or adding tools to your toolset.\n"
             f"This is the directory tree of the codebase at this time:\n{build_directory_tree()}\n\n"
             "This is the end of the system message, which is a method of config. Feel free to add helpful info to it.\n"
