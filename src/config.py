@@ -13,4 +13,3 @@ class config:
         )
 
 cfg = config()
-

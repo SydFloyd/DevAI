@@ -24,7 +24,7 @@ jobs:
           if git rev-parse HEAD^ >/dev/null 2>&1; then
             CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
           else
-            CHANGED_FILES=$(git ls-files)  # Handle first commit
+            CHANGED_FILES=$(git ls-files)
           fi
           echo "Changed files:"
           echo "$CHANGED_FILES"
