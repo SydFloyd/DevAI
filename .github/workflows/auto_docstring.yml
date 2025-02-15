@@ -28,9 +28,14 @@ jobs:
           fi
           echo "Changed files:"
           echo "$CHANGED_FILES"
-          echo "files<<EOF" >> $GITHUB_ENV
-          echo "$CHANGED_FILES" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          
+          # Preserve file paths correctly by quoting each line
+          FILE_LIST=""
+          while IFS= read -r file; do
+            FILE_LIST="$FILE_LIST \"$file\""
+          done <<< "$CHANGED_FILES"
+
+          echo "files=$FILE_LIST" >> $GITHUB_ENV
 
       - name: Auto Docstring
         uses: SydFloyd/AutoDocumenter@master
