@@ -1,7 +1,7 @@
 """
-Utilities for managing and automating tool-based workflows with OpenAI's API.
+Manage AI assistant workflows using OpenAI's API.
 
-This module facilitates the creation and management of AI assistants by dynamically invoking tools, processing their outputs, and handling interactions with the OpenAI API. It supports creating and deleting assistants, executing tools based on a given run configuration, and managing user interactions through a threaded interface. Threading is utilized to efficiently manage interactions, allowing for concurrent execution and response handling.
+This module facilitates the creation, management, and interaction with AI assistants via OpenAI's API. It supports tool-based workflows and user interactions through a threaded interface, enabling efficient handling of concurrent interactions and real-time responses.
 
 Functions:
     - get_client() -> OpenAI: Initializes and returns a new OpenAI client using the configured API key.
@@ -10,11 +10,11 @@ Functions:
     - execute_tools(run) -> List[Dict]: Executes tools specified in a run configuration and collects their outputs.
     - submit_tools_and_get_run(run, tool_outputs: List[Dict], thread_id: str) -> Run: Submits tool outputs and retrieves the updated run status.
     - interact(assistant_id: str, thread_id: str): Manages user interaction and tool execution within a thread.
-    - output_messages(run, thread_id: str): Lists messages from a thread if the run is completed; otherwise, prints the current run status.
+    - output_messages(run, thread_id: str): Prints the role and content of messages from a thread if the run is completed; otherwise, prints the current run status.
     - main(): Initializes the assistant, creates a thread, runs an infinite loop for interaction, and ensures cleanup of resources.
 
 Exceptions:
-    - General exceptions during tool execution and submission are caught and logged for troubleshooting, including errors in executing tool functions and failures in submitting tool outputs. Specific exceptions are not listed, but users should be aware of potential issues related to API connectivity and tool execution errors.
+    - General exceptions during tool execution and submission are caught and logged for troubleshooting. Users should be aware of potential issues related to API connectivity and tool execution errors.
 """
 
 from openai import OpenAI
@@ -128,6 +128,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
 
 
 
