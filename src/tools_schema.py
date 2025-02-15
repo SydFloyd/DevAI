@@ -1,7 +1,7 @@
 """
-Tools for file and directory management operations.
+File and directory management utilities.
 
-This module provides a set of functions to perform various file and directory operations such as reading, writing, deleting, and renaming files, as well as building directory trees and reading docstrings from Python files.
+This module provides a collection of functions to facilitate various operations on files and directories, including reading, writing, deleting, renaming, and displaying directory structures. It also includes functionality to extract docstrings from Python files, making it useful for development and file manipulation tasks.
 
 Functions:
     - build_directory_tree: Displays the directory tree of the project directory.
@@ -137,3 +137,4 @@ dev_tools = [
     rename_move_file_tool,
     read_docstring_tool,
 ]
+
