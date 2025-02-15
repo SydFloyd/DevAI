@@ -44,3 +44,4 @@ def build_directory_tree(start_path=".", exclude_dirs=None):
     _build_tree(start_path)
     return "\n".join(lines)
 
+
