@@ -2,7 +2,7 @@ from pathlib import Path
 import subprocess
 
 def write_file(file_path: str, new_content: str, project_root: str = ".") -> dict:
-    print(f"write_file function called, wrote {len(new_content)} chars to {file_path}.")
+    print(f"write_file function called, writing {len(new_content)} chars to {file_path}...")
     try:
         # Resolve the full, absolute path of both project_root and the target file.
         root_path = Path(project_root).resolve()
