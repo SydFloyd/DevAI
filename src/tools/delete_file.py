@@ -1,3 +1,17 @@
+"""
+Utilities for safely deleting files within a specified project root.
+
+This module provides functionality to delete files while ensuring they reside within a given project root directory. It is designed to prevent accidental deletion of files outside the designated project area.
+
+Functions:
+    - delete_file(file_path: str, project_root: str = ".") -> dict: Deletes a specified file within the project root.
+
+Exceptions:
+    - ValueError: Raised when attempting to delete a file outside the project root.
+    - FileNotFoundError: Raised when the specified file does not exist.
+    - IsADirectoryError: Raised when the specified path is a directory instead of a file.
+"""
+
 from pathlib import Path
 
 def delete_file(file_path: str, project_root: str = ".") -> dict:
@@ -21,5 +35,6 @@ def delete_file(file_path: str, project_root: str = ".") -> dict:
         return {"success": True}
     except Exception as e:
         return {"error": str(e)}
+
 
 

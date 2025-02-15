@@ -1,3 +1,18 @@
+"""
+Utilities for safely renaming and moving files within a project directory.
+
+This module provides a function to rename and move files while ensuring operations are confined within a specified project root directory. It includes comprehensive error handling to prevent operations on non-existent files, directories, or overwriting existing files.
+
+Functions:
+    - rename_move_file(source_path: str, destination_path: str, project_root: str = ".") -> dict: Renames and moves a file from the source path to the destination path, ensuring both are within the project root. Returns a dictionary indicating success or containing an error message.
+
+Exceptions:
+    - ValueError: Raised when attempting to operate outside the project root.
+    - FileNotFoundError: Raised when the source file does not exist.
+    - IsADirectoryError: Raised when the source path is a directory instead of a file.
+    - FileExistsError: Raised when the destination file already exists.
+"""
+
 from pathlib import Path
 
 def rename_move_file(
@@ -31,5 +46,7 @@ def rename_move_file(
         return {"success": True}
     except Exception as e:
         return {"error": str(e)}
+
+
 
 

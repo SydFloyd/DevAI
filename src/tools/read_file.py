@@ -1,3 +1,17 @@
+"""
+Utilities for safely reading files within a specified project root.
+
+This module provides functionality to read files while ensuring they reside within a defined project root directory, preventing unauthorized access to files outside this boundary. It is designed to enhance security by implementing basic sandboxing techniques.
+
+Functions:
+    - read_file(file_path: str, project_root: str = ".") -> dict: Reads the content of a file if it exists within the project root, returning its content or an error message.
+
+Exceptions:
+    - ValueError: Raised when attempting to access a file outside the project root.
+    - FileNotFoundError: Raised when the specified file does not exist.
+    - IsADirectoryError: Raised when the specified path is a directory, not a file.
+"""
+
 from pathlib import Path
 
 def read_file(file_path: str, project_root: str = ".") -> dict:
@@ -23,5 +37,6 @@ def read_file(file_path: str, project_root: str = ".") -> dict:
 
     except Exception as e:
         return {"error": str(e)}
+
 
 

@@ -1,3 +1,12 @@
+"""
+Utilities for building and displaying a directory tree structure.
+
+This module provides a function to generate a visual representation of a directory tree, with options to exclude certain directories. It is useful for visualizing the structure of a file system starting from a specified path.
+
+Functions:
+    - build_directory_tree(start_path: str = ".", exclude_dirs: Optional[List[str]] = None) -> str: Generates a directory tree as a string, excluding specified directories by default.
+"""
+
 import os
 
 def build_directory_tree(start_path=".", exclude_dirs=None):
@@ -43,5 +52,6 @@ def build_directory_tree(start_path=".", exclude_dirs=None):
 
     _build_tree(start_path)
     return "\n".join(lines)
+
 
 

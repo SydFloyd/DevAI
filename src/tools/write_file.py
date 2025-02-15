@@ -1,10 +1,10 @@
 """
-Utilities for file management and linting within project directories.
+Utilities for secure file writing and linting within project directories.
 
-This module provides functionality to write content to a file within a specified project root directory and perform linting on the written file using pylint. It ensures that files are not written outside the project root and handles errors such as writing to a directory or attempting to write outside the project root. The module also ensures that the parent directory exists and creates it if necessary.
+This module provides a function to safely write content to a file within a specified project root directory and perform linting on the written file using pylint. It ensures that files are not written outside the project root, handles errors such as writing to a directory or attempting to write outside the project root, and creates the parent directory if it does not exist.
 
 Functions:
-    - write_file(file_path: str, new_content: str, project_root: str = ".") -> dict: Writes content to a file, creates the parent directory if needed, and performs linting, returning a dictionary with success status and linting results or an error message.
+    - write_file(file_path: str, new_content: str, project_root: str = ".") -> dict: Writes content to a file, ensures the parent directory exists, performs linting, and returns a dictionary with the success status and linting results or an error message.
 
 Exceptions:
     - ValueError: Raised when attempting to write a file outside the project root.
@@ -44,4 +44,5 @@ def write_file(file_path: str, new_content: str, project_root: str = ".") -> dic
         return {"success": True, "lint_output": lint_result.stdout, "lint_errors": lint_result.stderr}
     except Exception as e:
         return {"error": str(e)}
+
 
