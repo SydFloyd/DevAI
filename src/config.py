@@ -1,3 +1,12 @@
+"""
+Configuration settings for initializing the application environment.
+
+This module defines a `config` class responsible for managing the retrieval of configuration settings, such as the OpenAI API key from environment variables. It also sets a default name and predefined instructions for an assistant agent, which describe the agent's role as a senior software developer and guide user interaction.
+
+Classes:
+    - config: Manages application configuration settings, including API key retrieval, default agent name, and assistant instructions.
+"""
+
 import os
 
 class config:
@@ -13,3 +22,6 @@ class config:
         )
 
 cfg = config()
+
+
+

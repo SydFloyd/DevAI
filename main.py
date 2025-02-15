@@ -1,15 +1,20 @@
 """
-Utilities for executing and interacting with tool-based workflows in a threaded environment.
+Utilities for managing and executing tool-based workflows with OpenAI's API.
 
-This module provides functions to execute tools based on a given run configuration, submit tool outputs, and interact with a user through a threaded interface. It is designed to facilitate automated workflows where tools are dynamically called and their outputs are processed and submitted.
+This module facilitates automated workflows by dynamically calling tools, processing their outputs, and managing interactions with the OpenAI API in a threaded environment. It includes functions for creating and deleting assistants, executing tools based on a given run configuration, and handling user interactions through a threaded interface.
 
 Functions:
-    - execute_tools(run): Executes specified tools and collects their outputs.
-    - submit_tools_and_get_run(run, tool_outputs, thread_id): Submits tool outputs and retrieves the updated run status.
-    - does_nothing(absolutely_nothing): A placeholder function that asserts a basic truth.
-    - interact(assistant_id, thread_id): Handles user interaction and tool execution within a thread.
-    - output_messages(run, thread_id): Outputs messages from a completed run.
-    - main(): Initializes the assistant and manages the interaction loop.
+    - get_client() -> OpenAI: Initializes and returns an OpenAI client using the configured API key.
+    - delete_assistant(assistant_id): Deletes an assistant using its ID.
+    - create_assistant() -> str: Creates a new assistant with specified instructions and tools, returning its ID.
+    - execute_tools(run) -> List[Dict]: Executes tools specified in a run configuration and collects their outputs.
+    - submit_tools_and_get_run(run, tool_outputs, thread_id) -> Run: Submits tool outputs and retrieves the updated run status.
+    - interact(assistant_id, thread_id): Manages user interaction and tool execution within a thread.
+    - output_messages(run, thread_id): Displays messages from a completed run.
+    - main(): Initializes the assistant, manages the interaction loop, and ensures cleanup of resources.
+
+Exceptions:
+    - General exceptions during tool execution and submission are caught and logged for troubleshooting. Specific exceptions include errors in executing tool functions and failures in submitting tool outputs.
 """
 
 from openai import OpenAI
@@ -122,3 +127,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
