@@ -1,4 +1,5 @@
 from pathlib import Path
+import subprocess
 
 def write_file(file_path: str, new_content: str, project_root: str = ".") -> dict:
     print(f"write_file function called, wrote {len(new_content)} chars to {file_path}.")
@@ -21,7 +22,13 @@ def write_file(file_path: str, new_content: str, project_root: str = ".") -> dic
         # Write (overwrite) the file with new_content.
         with open(target_path, "w", encoding="utf-8") as f:
             f.write(new_content)
-        return {"success": True}
+
+        # After writing the file, perform linting
+        lint_command = ["pylint", str(target_path)]
+        lint_result = subprocess.run(lint_command, capture_output=True, text=True)
+
+        # Return success status and linting results
+        return {"success": True, "lint_output": lint_result.stdout, "lint_errors": lint_result.stderr}
     except Exception as e:
         return {"error": str(e)}
 
