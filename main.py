@@ -1,20 +1,24 @@
 """
-Manage AI assistant workflows using OpenAI's API.
+Manage AI assistant workflows via OpenAI's API.
 
-This module facilitates the creation, management, and interaction with AI assistants via OpenAI's API. It supports tool-based workflows and user interactions through a threaded interface, enabling efficient handling of concurrent interactions and real-time responses.
+This module facilitates the creation, management, and interaction with AI assistants using OpenAI's API. It supports tool-based workflows and user interactions through a threaded interface, enabling efficient handling of concurrent interactions and real-time responses. The module dynamically executes tools and processes their outputs using the `importlib` and `json` modules.
 
 Functions:
     - get_client() -> OpenAI: Initializes and returns a new OpenAI client using the configured API key.
-    - delete_assistant(assistant_id: str): Deletes an assistant using its ID.
+    - delete_assistant(assistant_id: str) -> None: Deletes an assistant by its ID and prints a confirmation message.
     - create_assistant() -> str: Creates a new assistant with specified instructions, tools, and model "gpt-4o", returning its ID.
     - execute_tools(run) -> List[Dict]: Executes tools specified in a run configuration and collects their outputs.
     - submit_tools_and_get_run(run, tool_outputs: List[Dict], thread_id: str) -> Run: Submits tool outputs and retrieves the updated run status.
-    - interact(assistant_id: str, thread_id: str): Manages user interaction and tool execution within a thread.
-    - output_messages(run, thread_id: str): Prints the role and content of messages from a thread if the run is completed; otherwise, prints the current run status.
-    - main(): Initializes the assistant, creates a thread, runs an infinite loop for interaction, and ensures cleanup of resources.
+    - interact(assistant_id: str, thread_id: str) -> None: Manages user interaction and tool execution within a thread.
+    - output_messages(run, thread_id: str) -> None: Prints the role and content of messages from a thread if the run is completed; otherwise, prints the current run status.
+    - main() -> None: Initializes the assistant, creates a thread, runs an infinite loop for interaction, and ensures cleanup of resources.
 
 Exceptions:
     - General exceptions during tool execution and submission are caught and logged for troubleshooting. Users should be aware of potential issues related to API connectivity and tool execution errors.
+
+Dependencies:
+    - importlib: Used for dynamic importing of tool modules.
+    - json: Utilized for parsing and handling JSON data within tool execution.
 """
 
 from openai import OpenAI
@@ -127,6 +131,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
 
 
 
