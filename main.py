@@ -44,7 +44,6 @@ def create_assistant():
 		tools=[{"type": "code_interpreter"}, *dev_tools],
 		model="gpt-4o",
 	)
-	print(f"Created assistant {assistant.id}")
 
 	return assistant.id
 
