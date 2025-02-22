@@ -1,7 +1,7 @@
 """
-Manage AI assistant workflows via OpenAI's API.
+Facilitates the creation and management of AI assistants using OpenAI's API.
 
-This module facilitates the creation, management, and interaction with AI assistants using OpenAI's API. It supports tool-based workflows and user interactions through a threaded interface, enabling efficient handling of concurrent interactions and real-time responses. The module dynamically executes tools and processes their outputs using the `importlib` and `json` modules.
+This module provides functionalities to create, manage, and interact with AI assistants through OpenAI's API, supporting tool-based workflows and user interactions. It dynamically executes tools and processes their outputs, enabling efficient handling of concurrent interactions and real-time responses.
 
 Functions:
     - get_client() -> OpenAI: Initializes and returns a new OpenAI client using the configured API key.
@@ -14,11 +14,7 @@ Functions:
     - main() -> None: Initializes the assistant, creates a thread, runs an infinite loop for interaction, and ensures cleanup of resources.
 
 Exceptions:
-    - General exceptions during tool execution and submission are caught and logged for troubleshooting. Users should be aware of potential issues related to API connectivity and tool execution errors.
-
-Dependencies:
-    - importlib: Used for dynamic importing of tool modules.
-    - json: Utilized for parsing and handling JSON data within tool execution.
+    - General exceptions during tool execution and submission are caught and logged for troubleshooting, highlighting potential issues related to API connectivity and tool execution errors.
 """
 
 from openai import OpenAI
@@ -132,4 +128,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
 
