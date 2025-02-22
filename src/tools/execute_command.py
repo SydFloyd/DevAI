@@ -32,4 +32,3 @@ def execute_command(command):
         return f"Command executed successfully: {result.stdout}"
     except subprocess.CalledProcessError as e:
         return f"An error occurred while executing the command: {e}"
-

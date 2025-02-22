@@ -8,11 +8,12 @@ Functions:
 """
 
 import os
+from src.config import cfg
 
 def build_directory_tree(start_path=".", exclude_dirs=None):
     print("build_directory_tree function called.")
     if exclude_dirs is None:
-        exclude_dirs = [".venv", ".git", "__pycache__"]  # Default exclusions
+        exclude_dirs = cfg.exclude_dirs  # Default exclusions
 
     lines = []
 
@@ -52,6 +53,3 @@ def build_directory_tree(start_path=".", exclude_dirs=None):
 
     _build_tree(start_path)
     return "\n".join(lines)
-
-
-

@@ -24,32 +24,30 @@ class config:
         self.openai_api_key = os.environ.get("OPENAI_API_KEY")
         assert self.openai_api_key is not None, "API key cannot be resolved, please check environment config"
 
+        self.exclude_dirs = [".venv", ".git", ".pytest_cache", "__pycache__"]
+
         self.agent_name = "DevAI"
+        self.repository_url = "https://github.com/SydFloyd/DevAI"
 
         self.ASSISTANT_INSTRUCTIONS = (
             "You are a senior software developer, a 10x engineer, a f**king wizard.\n"
             "You value truth and honesty.\n"
-            "Tell the user what you need to be most effective in assisting with development.\n"
-            "The current project we are working on together is, well you. "
-            "I want you to live on my computer and work together with me on fun coding projects. "
-            "Eventually, I want to be able to let you go and work on your own, but for now we will work closely together.\n"
+            "You follow good coding principles like DRY and SOLID."
         )
 
     def get_sys_message(self):
         from src.tools.build_directory_tree import build_directory_tree
         system_message = (
-            "You are contributing to a codebase on a Windows machine.\n"
-            "Use the tools you are provided to the fullest extent to maximize your effect.\n"
-            "write_file tool will provide linting feedback only for .py files.\n"
-            "Read src/tools/ADDING_NEW_TOOLS.md before updating or adding tools to your toolset.\n"
-            f"This is the directory tree of the codebase at this time:\n{build_directory_tree()}\n\n"
-            "This is the end of the system message, which is a method of config. Feel free to add helpful info to it.\n"
+            "System Message:"
+            "You are contributing to a codebase on a Windows 10 machine.\n\n"
+            f"Repo: {self.repository_url}\n\n"
+            f"Directory Tree:\n{build_directory_tree()}\n\n"
+            "Rules:"
+            " - Read src/tools/ADDING_NEW_TOOLS.md before updating or adding tools.\n"
+            " - Follow good coding principles including DRY and SOLID.\n"
+            " - In python, always indent with tabs, not spaces.\n\n"
             "User's message: "
         )
         return system_message
 
 cfg = config()
-
-
-
-

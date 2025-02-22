@@ -49,7 +49,7 @@ write_file_tool = {
     "type": "function",
     "function": {
         "name": "write_file",
-        "description": "Writes or overwrites a file with new content.",
+        "description": "Writes or overwrites a file with new content. Returns linting info for .py files automatically.",
         "parameters": {
             "type": "object",
             "properties": {

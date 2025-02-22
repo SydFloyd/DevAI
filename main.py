@@ -119,6 +119,7 @@ def output_messages(run, thread_id):
 def main():
     assistant_id = create_assistant()
     thread = client.beta.threads.create()
+    print(thread)
     try:
         while True:
             interact(assistant_id, thread.id)
@@ -127,15 +128,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
 
