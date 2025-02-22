@@ -1,7 +1,7 @@
 """
-Facilitates the creation and management of AI assistants using OpenAI's API.
+Facilitates interaction with AI assistants using OpenAI's API.
 
-This module provides functionalities to create, manage, and interact with AI assistants through OpenAI's API, supporting tool-based workflows and user interactions. It dynamically executes tools and processes their outputs, enabling efficient handling of concurrent interactions and real-time responses.
+This module provides tools for creating, managing, and interacting with AI assistants, leveraging OpenAI's API to support dynamic tool execution and user interactions. It handles concurrent interactions and real-time responses efficiently.
 
 Functions:
     - get_client() -> OpenAI: Initializes and returns a new OpenAI client using the configured API key.
@@ -11,10 +11,15 @@ Functions:
     - submit_tools_and_get_run(client: OpenAI, run, tool_outputs: List[Dict], thread_id: str) -> Run: Submits tool outputs and retrieves the updated run status.
     - interact(client: OpenAI, assistant_id: str, thread_id: str) -> None: Manages user interaction and tool execution within a thread.
     - output_messages(client: OpenAI, run, thread_id: str) -> None: Prints the role and content of messages from a thread if the run is completed; otherwise, prints the current run status.
+    - get_thread_messages(client: OpenAI, thread) -> List[Dict]: Retrieves and returns messages from a specified thread.
     - main() -> None: Initializes the assistant, creates a thread, runs an infinite loop for interaction, and ensures cleanup of resources.
 
 Exceptions:
-    - General exceptions during tool execution and submission are caught and logged for troubleshooting, highlighting potential issues related to API connectivity and tool execution errors.
+    - ConnectionError: Raised when there are issues connecting to the OpenAI API.
+    - ToolExecutionError: Raised when a tool fails to execute properly.
+    - InvalidAssistantError: Raised when an invalid assistant ID is provided.
+
+This module is designed to streamline the process of interacting with AI assistants, making it easier to implement complex workflows and manage multiple interactions concurrently.
 """
 
 from src.config import cfg
@@ -69,6 +74,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
 
 
 

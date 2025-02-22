@@ -1,3 +1,20 @@
+"""
+Utilities for managing interactions with the OpenAI API, including assistant lifecycle and tool execution.
+
+This module provides functions to facilitate the integration of OpenAI's capabilities into applications by creating and deleting assistants, executing tools, and managing thread messages. It ensures efficient handling of API interactions and tool execution workflows.
+
+Functions:
+    - get_client() -> OpenAI: Initializes and returns an OpenAI client using the configured API key.
+    - delete_assistant(client: OpenAI, assistant_id: str): Deletes an assistant by its ID.
+    - create_assistant(client: OpenAI) -> str: Creates a new assistant with specified instructions and tools, returning its ID.
+    - execute_tools(client: OpenAI, run) -> List[Dict]: Executes specified tools and returns their outputs, handling exceptions during execution.
+    - submit_tools_and_get_run(client: OpenAI, run, tool_outputs: List[Dict], thread_id: str): Submits tool outputs and polls for run completion, handling submission errors.
+    - get_thread_messages(client: OpenAI, thread) -> List[Dict]: Retrieves messages from a specified thread.
+
+Exceptions:
+    - General exceptions are caught and logged during tool execution and submission processes to ensure robustness.
+"""
+
 from openai import OpenAI
 from src.config import cfg
 import importlib
@@ -59,3 +76,5 @@ def submit_tools_and_get_run(client, run, tool_outputs, thread_id):
 def get_thread_messages(client, thread):
     thread_messages = client.beta.threads.messages.list(thread.id)
     return thread_messages.data
+
+
