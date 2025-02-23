@@ -1,10 +1,10 @@
 """
-Utilities for safely reading files within a specified project root.
+Utilities for securely reading files within a specified project root.
 
-This module provides functionality to read files while ensuring they reside within a defined project root directory, preventing unauthorized access to files outside this boundary. It is designed to enhance security by implementing basic sandboxing techniques.
+This module provides functionality to read files while ensuring they reside within a defined project root directory, preventing unauthorized access to files outside this boundary. It is designed to enhance security by implementing basic sandboxing techniques. The module relies on the `src.config` for the `cfg.project_root` configuration, which is crucial for its operation.
 
 Functions:
-    - read_file(file_path: str, project_root: str = ".") -> dict: Reads the content of a file if it exists within the project root, returning its content or an error message.
+    - read_file(file_path: str, project_root: str = cfg.project_root) -> dict: Reads the content of a file if it exists within the project root, returning its content or an error message.
 
 Exceptions:
     - ValueError: Raised when attempting to access a file outside the project root.
@@ -38,3 +38,4 @@ def read_file(file_path: str, project_root: str = cfg.project_root) -> dict:
 
     except Exception as e:
         return {"error": str(e)}
+

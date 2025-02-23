@@ -1,13 +1,16 @@
 """
-Tool for executing system commands with user approval.
+Tool for secure execution of system commands with user consent.
 
-This module provides a function to execute shell commands on the machine after obtaining explicit user consent. It ensures that users are aware of the commands being executed, thus preventing unauthorized or accidental command execution.
+This module provides functionality to execute shell commands within a specified project root directory, ensuring user awareness and approval before execution. It helps prevent unauthorized or accidental command execution by requiring explicit user consent.
 
-Function:
-    - execute_command(command: str, project_root: str) -> str: Executes a given shell command in the specified project root directory after user approval and returns the result message.
+Functions:
+    - execute_command(command: str, project_root: str = cfg.project_root) -> str: Executes a given shell command in the specified or default project root directory after user approval and returns the result message.
+
+Exceptions:
+    - ValueError: Raised when the specified project root is invalid.
 
 Note:
-    - Users should be cautious about the commands they approve, as executing shell commands can affect system stability and security.
+    - Users should exercise caution when approving commands, as executing shell commands can impact system stability and security.
 """
 
 import subprocess
@@ -38,3 +41,5 @@ def execute_command(command, project_root = cfg.project_root):
         return f"Command executed successfully: {result.stdout}"
     except subprocess.CalledProcessError as e:
         return f"An error occurred while executing the command: {e.stderr or e}"
+
+

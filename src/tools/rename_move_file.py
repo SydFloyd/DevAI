@@ -1,10 +1,10 @@
 """
 Utilities for safely renaming and moving files within a project directory.
 
-This module provides a function to rename and move files while ensuring operations are confined within a specified project root directory. It includes comprehensive error handling to prevent operations on non-existent files, directories, or overwriting existing files.
+This module provides a function to rename and move files while ensuring operations are confined within a specified project root directory. The `project_root` parameter is configurable through the `cfg` module, allowing flexibility in defining the root directory. Comprehensive error handling is included to prevent operations on non-existent files, directories, or overwriting existing files.
 
 Functions:
-    - rename_move_file(source_path: str, destination_path: str, project_root: str = ".") -> dict: Renames and moves a file from the source path to the destination path, ensuring both are within the project root. Returns a dictionary indicating success or containing an error message.
+    - rename_move_file(source_path: str, destination_path: str, project_root: str = cfg.project_root) -> dict: Renames and moves a file from the source path to the destination path, ensuring both are within the project root. Returns a dictionary indicating success or containing an error message.
 
 Exceptions:
     - ValueError: Raised when attempting to operate outside the project root.
@@ -47,3 +47,4 @@ def rename_move_file(
         return {"success": True}
     except Exception as e:
         return {"error": str(e)}
+

@@ -1,6 +1,13 @@
 """
-Test script for tools in the src/tools directory.
-This script tests functionalities of various tools implemented.
+Tests for validating the functionality of utility tools in the src/tools directory.
+
+This module contains test functions to verify the correct operation of various utility functions used for directory management, file operations, command execution, and docstring reading. These tests ensure that the tools perform as expected and handle errors gracefully, contributing to the robustness of the larger project.
+
+Functions:
+    - test_build_directory_tree(): Validates the build_directory_tree function.
+    - test_delete_file(): Checks the delete_file function for proper file deletion.
+    - test_execute_command(): Tests the execute_command function to ensure commands are executed correctly.
+    - test_read_docstring(): Verifies the read_docstring function's ability to read and return docstrings accurately.
 """
 
 import os
@@ -60,3 +67,5 @@ if __name__ == "__main__":
 	test_delete_file()
 	test_execute_command()
 	test_read_docstring()
+
+

@@ -1,10 +1,10 @@
 """
 Utilities for safely deleting files within a specified project root.
 
-This module provides functionality to delete files while ensuring they reside within a given project root directory. It is designed to prevent accidental deletion of files outside the designated project area.
+This module provides functionality to delete files while ensuring they reside within a given project root directory, preventing accidental deletion of files outside the designated project area. The module depends on `src.config.cfg` for configuration, specifically using `cfg.project_root` as the default project root.
 
 Functions:
-    - delete_file(file_path: str, project_root: str = ".") -> dict: Deletes a specified file within the project root.
+    - delete_file(file_path: str, project_root: str = cfg.project_root) -> dict: Deletes a specified file within the project root.
 
 Exceptions:
     - ValueError: Raised when attempting to delete a file outside the project root.
@@ -36,3 +36,4 @@ def delete_file(file_path: str, project_root: str = cfg.project_root) -> dict:
         return {"success": True}
     except Exception as e:
         return {"error": str(e)}
+

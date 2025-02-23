@@ -1,25 +1,23 @@
 """
-Facilitates interaction with AI assistants using OpenAI's API.
+Module for facilitating interactions with AI assistants using OpenAI's API.
 
-This module provides tools for creating, managing, and interacting with AI assistants, leveraging OpenAI's API to support dynamic tool execution and user interactions. It handles concurrent interactions and real-time responses efficiently.
+This module provides a comprehensive framework for creating, managing, and interacting with AI assistants, leveraging OpenAI's API to execute dynamic tools and handle user interactions. It supports concurrent interactions and real-time responses, making it suitable for complex workflows.
 
 Functions:
     - get_client() -> OpenAI: Initializes and returns a new OpenAI client using the configured API key.
     - delete_assistant(client: OpenAI, assistant_id: str) -> None: Deletes an assistant by its ID and prints a confirmation message.
-    - create_assistant(client: OpenAI) -> str: Creates a new assistant with specified instructions, tools, and model "gpt-4o", returning its ID.
+    - create_assistant(client: OpenAI) -> str: Creates a new assistant with specified instructions and returns its ID.
     - execute_tools(client: OpenAI, run) -> List[Dict]: Executes tools specified in a run configuration and collects their outputs.
     - submit_tools_and_get_run(client: OpenAI, run, tool_outputs: List[Dict], thread_id: str) -> Run: Submits tool outputs and retrieves the updated run status.
-    - interact(client: OpenAI, assistant_id: str, thread_id: str) -> None: Manages user interaction and tool execution within a thread.
-    - output_messages(client: OpenAI, run, thread_id: str) -> None: Prints the role and content of messages from a thread if the run is completed; otherwise, prints the current run status.
+    - interact(client: OpenAI, assistant_id: str, thread_id: str) -> bool: Manages user interaction and tool execution within a thread, using `cfg.get_sys_message()` to construct requests.
+    - output_messages(client: OpenAI, run, thread_id: str) -> None: Prints the role and content of the first message from a thread if the run is completed; otherwise, prints the current run status.
     - get_thread_messages(client: OpenAI, thread) -> List[Dict]: Retrieves and returns messages from a specified thread.
-    - main() -> None: Initializes the assistant, creates a thread, runs an infinite loop for interaction, and ensures cleanup of resources.
+    - main() -> None: Initializes the assistant, creates a thread using `client.beta.threads.create()`, runs an interaction loop, and ensures cleanup of resources.
 
 Exceptions:
     - ConnectionError: Raised when there are issues connecting to the OpenAI API.
     - ToolExecutionError: Raised when a tool fails to execute properly.
     - InvalidAssistantError: Raised when an invalid assistant ID is provided.
-
-This module is designed to streamline the process of interacting with AI assistants, making it easier to implement complex workflows and manage multiple interactions concurrently.
 """
 
 from src.config import cfg
@@ -84,3 +82,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+

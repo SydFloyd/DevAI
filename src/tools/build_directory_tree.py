@@ -1,10 +1,10 @@
 """
-Utilities for building and displaying a directory tree structure.
+Utilities for building and displaying a directory tree structure with configurable options.
 
-This module provides a function to generate a visual representation of a directory tree, with options to exclude certain directories. It is useful for visualizing the structure of a file system starting from a specified path.
+This module provides a function to generate a visual representation of a directory tree, using configuration settings from the `src.config` module. It is useful for visualizing the structure of a file system starting from a specified path, with options to exclude certain directories based on the configuration.
 
 Functions:
-    - build_directory_tree(start_path: str = ".", exclude_dirs: Optional[List[str]] = None) -> str: Generates a directory tree as a string, excluding specified directories by default.
+    - build_directory_tree(start_path=cfg.project_root, exclude_dirs=cfg.exclude_dirs) -> str: Generates a directory tree as a string, using default paths and exclusions from the `cfg` configuration object.
 """
 
 import os
@@ -51,3 +51,4 @@ def build_directory_tree(start_path=cfg.project_root, exclude_dirs=cfg.exclude_d
 
     _build_tree(start_path)
     return "\n".join(lines)
+
