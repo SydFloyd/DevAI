@@ -77,4 +77,23 @@ def get_thread_messages(client, thread):
     thread_messages = client.beta.threads.messages.list(thread.id)
     return thread_messages.data
 
+def chat(client, query, model="gpt-4o", messages=[], system_message=None, temperature=0.7):
+    if system_message:
+        messages = [{"role": "developer", "content": system_message}] + messages
 
+    messages = messages + [{"role": "user", "content": query}]
+    
+    completion = client.chat.completions.create(
+        model = model,
+        messages = messages,
+        temperature = temperature
+    )
+
+    message = completion.choices[0].message
+
+    text = message.content
+    refusal = message.refusal
+    if refusal is not None:
+        print(f"There was a refusal! {str(refusal)}")
+
+    return text

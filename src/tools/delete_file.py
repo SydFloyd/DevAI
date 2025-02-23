@@ -13,8 +13,9 @@ Exceptions:
 """
 
 from pathlib import Path
+from src.config import cfg
 
-def delete_file(file_path: str, project_root: str = ".") -> dict:
+def delete_file(file_path: str, project_root: str = cfg.project_root) -> dict:
     print(f"delete_file function called on {file_path}.")
     root_path = Path(project_root).resolve()
     target_path = (root_path / file_path).resolve()

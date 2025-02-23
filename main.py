@@ -27,6 +27,11 @@ from src.utils.openai_utils import execute_tools, submit_tools_and_get_run, get_
 
 def interact(client, assistant_id, thread_id):
     query = input(f"\n{cfg.agent_name}>> ")
+
+    # check for exit
+    if query.strip().lower() in cfg.exit_commands:
+        return True
+
     request = cfg.get_sys_message() + query
     message = client.beta.threads.messages.create(
         thread_id=thread_id,
@@ -50,6 +55,8 @@ def interact(client, assistant_id, thread_id):
 
     output_messages(client, run, thread_id)
 
+    return False
+
 def output_messages(client, run, thread_id):
     if run.status == 'completed':
         messages = client.beta.threads.messages.list(thread_id=thread_id)
@@ -67,17 +74,13 @@ def main():
     thread = client.beta.threads.create()
     try:
         while True:
-            print(get_thread_messages(client, thread))
-            interact(client, assistant_id, thread.id)
+            # print(get_thread_messages(client, thread))
+            quit = interact(client, assistant_id, thread.id)
+            if quit:
+                break
     finally:
         delete_assistant(client, assistant_id)
+        print("Session is ended.\n")
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-

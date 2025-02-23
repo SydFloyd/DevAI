@@ -14,8 +14,9 @@ Exceptions:
 
 from pathlib import Path
 import ast
+from src.config import cfg
 
-def read_docstring(file_path: str, project_root: str = ".") -> dict:
+def read_docstring(file_path: str, project_root: str = cfg.project_root) -> dict:
     print(f"read_docstring function called on {file_path}.")
     
     try:

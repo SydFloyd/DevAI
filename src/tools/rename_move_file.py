@@ -14,11 +14,12 @@ Exceptions:
 """
 
 from pathlib import Path
+from src.config import cfg
 
 def rename_move_file(
     source_path: str,
     destination_path: str,
-    project_root: str = "."
+    project_root: str = cfg.project_root
 ) -> dict:
     print(f"rename_move_file called from {source_path} to {destination_path}.")
 

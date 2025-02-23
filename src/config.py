@@ -24,16 +24,24 @@ class config:
         self.openai_api_key = os.environ.get("OPENAI_API_KEY")
         assert self.openai_api_key is not None, "API key cannot be resolved, please check environment config"
 
-        self.exclude_dirs = [".venv", ".git", ".pytest_cache", "__pycache__"]
-
-        self.agent_name = "DevAI"
-        self.repository_url = "https://github.com/SydFloyd/DevAI"
-
         self.ASSISTANT_INSTRUCTIONS = (
             "You are a senior software developer, a 10x engineer, a f**king wizard.\n"
             "You value truth and honesty.\n"
             "You follow good coding principles like DRY and SOLID."
         )
+
+        self.exclude_dirs = [".venv", ".git", ".pytest_cache", "__pycache__"]
+
+        self.agent_name = "DevAI"
+        self.repository_url = "https://github.com/SydFloyd/DevAI"
+
+        self.exit_commands = ["exit", "quit", "q"] # all lowercase
+
+        self.project_root = "."
+
+        if not os.path.exists(self.project_root):
+            os.mkdir(self.project_root)
+            print(f"Made project directory {self.project_root}")
 
     def get_sys_message(self):
         from src.tools.build_directory_tree import build_directory_tree

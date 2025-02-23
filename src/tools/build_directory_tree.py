@@ -10,10 +10,8 @@ Functions:
 import os
 from src.config import cfg
 
-def build_directory_tree(start_path=".", exclude_dirs=None):
+def build_directory_tree(start_path=cfg.project_root, exclude_dirs=cfg.exclude_dirs):
     print("build_directory_tree function called.")
-    if exclude_dirs is None:
-        exclude_dirs = cfg.exclude_dirs  # Default exclusions
 
     lines = []
 

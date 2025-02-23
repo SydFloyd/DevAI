@@ -13,8 +13,9 @@ Exceptions:
 """
 
 from pathlib import Path
+from src.config import cfg
 
-def read_file(file_path: str, project_root: str = ".") -> dict:
+def read_file(file_path: str, project_root: str = cfg.project_root) -> dict:
     print(f"read_file function called on {file_path}.")
     try:
         # Resolve the full, absolute path of both project_root and the target file.
