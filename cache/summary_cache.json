@@ -1,0 +1,94 @@
+{
+  "files": {
+    ".\\main.py": {
+      "hash": "bccf990617386a19dcf606a38b92ed53c82c895fee836869a288e33213eb6263",
+      "summary": null
+    },
+    ".\\scratchpad.py": {
+      "hash": "4d2fd5a13f0a2e4287fe8676b1ee38568cee6ee2223326a97897d180008331ee",
+      "summary": null
+    },
+    ".\\test_tools.py": {
+      "hash": "b14898d78d1efa05280f6a2138981986de56191bdec47075b36b8d5eadd1f61e",
+      "summary": null
+    },
+    ".\\src\\config.py": {
+      "hash": "a6193fab3efe8c264dc08052706c6edebeced52e440a60a8810adea4263d34dd",
+      "summary": null
+    },
+    ".\\src\\tools_schema.py": {
+      "hash": "65f576926f5d2b286674e8bcd68eb06d501a1db5b66fe1e3e07a4b0289852e8a",
+      "summary": null
+    },
+    ".\\src\\__init__.py": {
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": null
+    },
+    ".\\src\\tools\\build_directory_tree.py": {
+      "hash": "0ba08a95e01ac2bc8fe1b684d85f414c81620a0206d1a0f621f788188e0d696b",
+      "summary": null
+    },
+    ".\\src\\tools\\delete_file.py": {
+      "hash": "947d6ed306d1f6753dd6c6ddcca83b17780e12cf6398e2bf6600f1b48827f210",
+      "summary": null
+    },
+    ".\\src\\tools\\execute_command.py": {
+      "hash": "5f740d77656cd979381b83ae003c3da211b2ed0f0e4b2fcf776b48179a7f9ebf",
+      "summary": null
+    },
+    ".\\src\\tools\\read_docstring.py": {
+      "hash": "683e9c640e54483340e1e08b773d938bb140eb6ee6e183558f086fc570c4cbff",
+      "summary": null
+    },
+    ".\\src\\tools\\read_file.py": {
+      "hash": "688510e4131b4d67b8ceb5a3c6390f87ee209100d7e950fd4d908c282d4a115c",
+      "summary": null
+    },
+    ".\\src\\tools\\rename_move_file.py": {
+      "hash": "27780e101a89009e9f3b389cdd976a04997410793884da67631ed67aadd04a09",
+      "summary": null
+    },
+    ".\\src\\tools\\write_file.py": {
+      "hash": "6ff63e30e6e4a7430032b34d95b4dbfa5296feaa25719fb827cb44e2e5f996f2",
+      "summary": null
+    },
+    ".\\src\\tools\\__init__.py": {
+      "hash": "976feb9fdaf8bef66d3f1a81af29423a3e96cd8caec0cf78ebfb32158d14b73d",
+      "summary": null
+    },
+    ".\\src\\utils\\auto_document.py": {
+      "hash": "a5b6e147dbb5a61016e9c30a7e3865d218f7a4d9416f18a5fe4cf3ca564133d9",
+      "summary": null
+    },
+    ".\\src\\utils\\auto_document2.py": {
+      "hash": "71566ada514efaea29cb6cd79f96d55bea8836bf2d92a8fb74af425d28343543",
+      "summary": null
+    },
+    ".\\src\\utils\\openai_utils.py": {
+      "hash": "3955c0048d6e3743e134e2855c4220d7c1d94f8d5defecb863a164caf8793a2b",
+      "summary": null
+    }
+  },
+  "directories": {
+    ".": {
+      "dir_hash": "2e4693e8b1392a8df701a55a7c55ef5f43ada1e7b9acbf00497dfa2b631242c7",
+      "summary": null
+    },
+    ".\\src": {
+      "dir_hash": "ac8d36b0a4e59ae55d96b8e57f6193ff80ed74cd766fef911189e7adcc53e9f7",
+      "summary": null
+    },
+    ".\\src\\tools": {
+      "dir_hash": "96829c3580f4f20107ad6985224662d3b6c2d68e3a0c3e3b48419fa236c06edd",
+      "summary": null
+    },
+    ".\\src\\utils": {
+      "dir_hash": "f34a629920abfd8bcd32867423f494f4ae5199b36e51f8adb8f8533026b87c84",
+      "summary": null
+    }
+  },
+  "codebase": {
+    "hash": "36ecd75273053e5c2cec98ce10b4f8f8595d2a440e880fad0f49e74db6645d1b",
+    "summary": null
+  }
+}

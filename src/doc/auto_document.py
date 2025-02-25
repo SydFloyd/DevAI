@@ -1,26 +1,3 @@
-"""
-Tools for summarizing Python codebases using language models.
-
-This module provides functionality to generate summaries for Python files, directories, and entire codebases using a combination of AST parsing and language model prompts. It supports caching to avoid redundant computations and can handle large texts by chunking.
-
-Classes:
-    - LLM: A class to interact with a language model for generating summaries.
-
-Functions:
-    - load_cache(cache_file: str) -> dict: Load summaries from a JSON cache.
-    - save_cache(cache: dict, cache_file: str): Save updated cache to disk.
-    - compute_sha256(filepath: str) -> str: Compute SHA-256 hash of a file.
-    - combine_hashes(hashes: list) -> str: Combine multiple hashes into one.
-    - count_tokens(text: str) -> int: Approximate token count for a text.
-    - chunk_text(text: str, chunk_size: int): Split text into token chunks.
-    - ast_parse_file(filepath: str) -> dict: Parse a Python file using AST.
-    - summarize_large_text(llm, text: str, chunk_label: str) -> str: Summarize large text by chunking.
-    - summarize_file_ast(llm, file_info: dict) -> str: Summarize a file using AST data.
-    - get_file_summary(llm, filepath: str, cache: dict, use_ast: bool) -> str: Return a cached or new summary for a file.
-    - summarize_directory(llm, dir_path: str, file_summaries: dict, cache: dict, embed_raw_code_in_dir_summary: bool) -> str: Summarize a directory.
-    - build_documentation(root_dir: str, use_ast: bool, embed_raw_code_in_dir_summary: bool) -> str: Main pipeline to summarize files, directories, and codebase.
-"""
-
 import os
 import ast
 import hashlib
@@ -29,15 +6,7 @@ from collections import defaultdict
 import tiktoken
 
 from src.config import cfg
-from src.utils.openai_utils import get_client, chat
-
-class LLM:
-    def __init__(self, system_message, temperature=0.7):
-        self.system_message = system_message
-        self.temperature = temperature
-        self.client = get_client()
-    def prompt(self, prompt):
-        chat(self.client, prompt, system_message=self.system_message, temperature=self.temperature)
+from src.utils.openai_utils import LLM
 
 if not os.path.exists("cache"):
     os.mkdir("cache")
@@ -74,11 +43,14 @@ def combine_hashes(hashes):
 
 def count_tokens(text: str) -> int:
     """Approximate token count for a given text."""
-    enc = tiktoken.get_encoding("cl100k_base")  # or appropriate encoder
+    enc = tiktoken.get_encoding("cl100k_base")
     return len(enc.encode(text))
 
 def chunk_text(text: str, chunk_size: int = CHUNK_SIZE):
-    """Split text into chunks of up to `chunk_size` tokens."""
+    """
+    Split text into chunks of up to `chunk_size` tokens.
+    Useful if a single summary prompt grows beyond the model context.
+    """
     enc = tiktoken.get_encoding("cl100k_base")
     tokens = enc.encode(text)
     for i in range(0, len(tokens), chunk_size):
@@ -123,36 +95,31 @@ def ast_parse_file(filepath: str):
         "source": source
     }
 
-def summarize_large_text(llm, text: str, chunk_label: str = "file/directory"):
+def summarize_large_text(llm, text: str, chunk_label: str = "text"):
     """
-    Summarize large text by chunking if necessary.
-    Return a cohesive summary of the entire text.
+    Summarize large text by chunking if necessary, returning a cohesive final summary.
     """
     if count_tokens(text) <= CHUNK_SIZE:
-        # Summarize in one go
-        return llm.prompt(f"Summarize the following {chunk_label} contents:\n{text}")
+        return llm.prompt(f"Summarize the following {chunk_label}:\n{text}")
     else:
-        # Summarize chunk by chunk
         partial_summaries = []
         for idx, chunk in enumerate(chunk_text(text, CHUNK_SIZE)):
-            chunk_summary = llm.prompt(
+            summary_part = llm.prompt(
                 f"You are summarizing chunk #{idx} of a large {chunk_label}.\n"
                 "Focus on key functionalities, classes, dependencies, purpose, etc.\n"
                 f"{chunk}"
             )
-            partial_summaries.append(chunk_summary)
+            partial_summaries.append(summary_part)
 
-        # Combine partial summaries
         combined_summary = llm.prompt(
-            "Combine the following chunk-level summaries into one cohesive final summary:\n\n"
+            "Combine these chunk-level summaries into one cohesive final summary:\n\n"
             + "\n\n".join(partial_summaries)
         )
         return combined_summary
 
 def summarize_file_ast(llm, file_info: dict):
     """
-    Summarize a file using AST data (reducing token usage).
-    Fall back to full-text summarization if there's an error or you want more detail.
+    Summarize a file using AST data, focusing on classes, functions, imports, etc.
     """
     prompt = (
         "You are generating documentation for this Python file.\n"
@@ -172,26 +139,25 @@ def get_file_summary(llm, filepath: str, cache: dict, use_ast=True) -> str:
     file_hash = compute_sha256(filepath)
     cached_entry = cache["files"].get(filepath)
 
-    # Check if we can reuse the cached summary
+    # Reuse cached summary if file hash is unchanged
     if cached_entry and cached_entry["hash"] == file_hash:
         return cached_entry["summary"]
 
-    # Otherwise, re-summarize
+    # Otherwise, summarize anew
     if use_ast:
         file_info = ast_parse_file(filepath)
         if "error" in file_info or not file_info.get("source"):
-            # Fallback to full text summarization
+            # Fallback to full-text summarization
             with open(filepath, "r", encoding="utf-8") as f:
                 file_content = f.read()
-            summary = summarize_large_text(llm, file_content, chunk_label="file")
+            summary = summarize_large_text(llm, file_content, chunk_label="file content")
         else:
-            # Summarize with AST-based approach
             summary = summarize_file_ast(llm, file_info)
     else:
-        # Summarize entire file text
+        # Summarize by reading raw content
         with open(filepath, "r", encoding="utf-8") as f:
             file_content = f.read()
-        summary = summarize_large_text(llm, file_content, chunk_label="file")
+        summary = summarize_large_text(llm, file_content, chunk_label="file content")
 
     # Update cache
     cache["files"][filepath] = {
@@ -200,68 +166,42 @@ def get_file_summary(llm, filepath: str, cache: dict, use_ast=True) -> str:
     }
     return summary
 
-def summarize_directory(
-    llm,
-    dir_path: str,
-    file_summaries: dict,
-    cache: dict,
-    embed_raw_code_in_dir_summary: bool = True
-) -> str:
+def summarize_directory(llm, dir_path: str, file_summaries: dict, cache: dict) -> str:
     """
-    Summarize a directory. Optionally include the raw code for all files if your context window is huge.
-    Otherwise, rely on file-level summaries.
-
-    `file_summaries` is a dict of {filepath: summary_text}.
+    Summarize a directory based on its file-level summaries (no raw code embedding).
+    
+    'file_summaries' is a dict: { filepath -> summary_text }.
     """
-    # Compute the combined directory hash from all file hashes
-    file_hashes = []
-    for fp in file_summaries.keys():
-        file_hashes.append(cache["files"][fp]["hash"])
+    # Compute directory hash by combining file hashes
+    file_hashes = [cache["files"][fp]["hash"] for fp in file_summaries]
     dir_hash = combine_hashes(sorted(file_hashes))
 
-    # Check cached directory summary
+    # Reuse cached directory summary if hash is unchanged
     cached_entry = cache["directories"].get(dir_path)
     if cached_entry and cached_entry["dir_hash"] == dir_hash:
         return cached_entry["summary"]
 
-    # No valid cache; create a new directory-level summary
-    # Optionally embed raw code if we have huge context capacity
-    if embed_raw_code_in_dir_summary:
-        # Concatenate all file contents for a single directory-level summary
-        dir_text_chunks = []
-        for fp in file_summaries.keys():
-            with open(fp, "r", encoding="utf-8") as f:
-                dir_text_chunks.append(f"### {fp}\n{f.read()}")
-        full_dir_text = "\n\n".join(dir_text_chunks)
+    # Build a single text that includes each file-level summary
+    prompt_parts = []
+    for fp, summary in file_summaries.items():
+        prompt_parts.append(f"FILE: {fp}\nSUMMARY:\n{summary}\n")
+    combined_summaries = "\n".join(prompt_parts)
 
-        # Summarize the entire directory's raw code
-        directory_summary = summarize_large_text(llm, full_dir_text, chunk_label="directory")
-    else:
-        # Summarize by referencing file-level summaries only
-        prompt_pieces = []
-        for fp, fsum in file_summaries.items():
-            prompt_pieces.append(f"FILE: {fp}\nSUMMARY:\n{fsum}\n")
-        combined_summaries = "\n".join(prompt_pieces)
+    directory_summary = summarize_large_text(llm, combined_summaries, chunk_label="directory summaries")
 
-        directory_summary = summarize_large_text(llm, combined_summaries, chunk_label="directory summaries")
-
-    # Store directory summary in cache
+    # Cache the new summary
     cache["directories"][dir_path] = {
         "dir_hash": dir_hash,
         "summary": directory_summary
     }
     return directory_summary
 
-def build_documentation(
-    root_dir: str,
-    use_ast: bool = True,
-    embed_raw_code_in_dir_summary: bool = False
-) -> str:
+def build_documentation(root_dir: str, use_ast: bool = True) -> str:
     """
-    Main pipeline to:
-      1. Summarize each file (with caching).
-      2. Summarize each directory from file-level summaries (with caching).
-      3. Summarize the entire codebase from directory-level summaries (with caching).
+    Main pipeline:
+      1) Summarize each file (cached).
+      2) Summarize each directory from file-level summaries (cached).
+      3) Summarize the entire codebase from directory-level summaries (cached).
     """
     llm = LLM(system_message="You are an expert in generating complete and concise documentation of code.")
     cache = load_cache()
@@ -274,59 +214,43 @@ def build_documentation(
         if py_files:
             dir_to_files[dirpath].extend(py_files)
 
-    # 1) Summarize each file
+    # Summarize files and directories
     directory_summaries = {}
     for dir_path, files in dir_to_files.items():
         file_sums = {}
         for fpath in files:
             file_sums[fpath] = get_file_summary(llm, fpath, cache, use_ast=use_ast)
 
-        # 2) Summarize directory based on file-level data
-        directory_summary = summarize_directory(
-            llm,
-            dir_path,
-            file_sums,
-            cache,
-            embed_raw_code_in_dir_summary=embed_raw_code_in_dir_summary
-        )
+        directory_summary = summarize_directory(llm, dir_path, file_sums, cache)
         directory_summaries[dir_path] = directory_summary
 
-    # 3) Summarize entire codebase
-    # Build a combined hash of all directory hashes
-    dir_hashes = []
-    for dpath, dsummary in directory_summaries.items():
-        dir_hashes.append(cache["directories"][dpath]["dir_hash"])
+    # Summarize the entire codebase
+    # Create a codebase hash from directory hashes
+    dir_hashes = [cache["directories"][dpath]["dir_hash"] for dpath in directory_summaries]
     codebase_hash = combine_hashes(sorted(dir_hashes))
 
     cached_codebase = cache["codebase"].get("hash")
     if cached_codebase and cached_codebase == codebase_hash:
-        # If codebase hasn't changed, reuse final summary
         final_summary = cache["codebase"]["summary"]
     else:
-        # Re-generate top-level summary
-        # If your context window is truly massive (e.g. 128k), you can embed all directory summaries
-        # directly. Otherwise, chunk them if they exceed the limit.
+        # Build a text from the directory-level summaries
         all_dir_summaries_text = []
         for dpath, dsummary in directory_summaries.items():
             all_dir_summaries_text.append(f"DIR: {dpath}\nSUMMARY:\n{dsummary}\n")
         combined_text = "\n".join(all_dir_summaries_text)
 
+        # Summarize everything in one go (chunked if needed)
         final_summary = summarize_large_text(llm, combined_text, chunk_label="codebase")
 
-        # Cache the codebase summary
+        # Cache the final codebase summary
         cache["codebase"]["hash"] = codebase_hash
         cache["codebase"]["summary"] = final_summary
 
-    # Write out the updated cache
+    # Save updated cache
     save_cache(cache)
 
     return final_summary
 
 # Example usage:
-# doc = build_documentation(
-#     "/path/to/repo",
-#     use_ast=True,
-#     embed_raw_code_in_dir_summary=True  # If you want to feed entire directory contents for GPT-4 128k
-# )
-# print(doc)
-
+# final_doc = build_documentation("/path/to/repo", use_ast=True)
+# print(final_doc)

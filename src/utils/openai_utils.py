@@ -99,3 +99,11 @@ def chat(client, query, model="gpt-4o", messages=[], system_message=None, temper
 
     return text
 
+
+class LLM:
+    def __init__(self, system_message, temperature=0.7):
+        self.system_message = system_message
+        self.temperature = temperature
+        self.client = get_client()
+    def prompt(self, prompt):
+        chat(self.client, prompt, system_message=self.system_message, temperature=self.temperature)
