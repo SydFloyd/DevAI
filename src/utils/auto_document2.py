@@ -1,3 +1,26 @@
+"""
+Tools for summarizing Python codebases using language models.
+
+This module provides functionality to generate summaries for Python files, directories, and entire codebases using a combination of AST parsing and language model prompts. It supports caching to avoid redundant computations and can handle large texts by chunking.
+
+Classes:
+    - LLM: A class to interact with a language model for generating summaries.
+
+Functions:
+    - load_cache(cache_file: str) -> dict: Load summaries from a JSON cache.
+    - save_cache(cache: dict, cache_file: str): Save updated cache to disk.
+    - compute_sha256(filepath: str) -> str: Compute SHA-256 hash of a file.
+    - combine_hashes(hashes: list) -> str: Combine multiple hashes into one.
+    - count_tokens(text: str) -> int: Approximate token count for a text.
+    - chunk_text(text: str, chunk_size: int): Split text into token chunks.
+    - ast_parse_file(filepath: str) -> dict: Parse a Python file using AST.
+    - summarize_large_text(llm, text: str, chunk_label: str) -> str: Summarize large text by chunking.
+    - summarize_file_ast(llm, file_info: dict) -> str: Summarize a file using AST data.
+    - get_file_summary(llm, filepath: str, cache: dict, use_ast: bool) -> str: Return a cached or new summary for a file.
+    - summarize_directory(llm, dir_path: str, file_summaries: dict, cache: dict, embed_raw_code_in_dir_summary: bool) -> str: Summarize a directory.
+    - build_documentation(root_dir: str, use_ast: bool, embed_raw_code_in_dir_summary: bool) -> str: Main pipeline to summarize files, directories, and codebase.
+"""
+
 import os
 import ast
 import hashlib
@@ -306,3 +329,4 @@ def build_documentation(
 #     embed_raw_code_in_dir_summary=True  # If you want to feed entire directory contents for GPT-4 128k
 # )
 # print(doc)
+
