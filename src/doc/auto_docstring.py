@@ -1,3 +1,16 @@
+"""
+Tools for updating top-level docstrings in Python files.
+
+This module provides a class to detect changes in Python files, generate new docstrings for them using a language model, and update their top-level docstrings in place. It is useful for maintaining consistent and up-to-date documentation in codebases.
+
+Classes:
+    - DocstringUpdater: Detects file changes, generates docstrings, and updates files.
+
+Functions:
+    - update_docstring_in_file(file_path: str): Updates the top-level docstring of a single file.
+    - update_docstrings_in_directory(directory: str): Recursively updates docstrings in a directory.
+"""
+
 import os
 import re
 import json
@@ -163,3 +176,4 @@ class DocstringUpdater:
 #     llm = LLM(system_message="You are an expert Python docstring generator.")
 #     updater = DocstringUpdater(llm)
 #     updater.update_docstrings_in_directory("path/to/your/python/codebase")
+

@@ -1,3 +1,23 @@
+"""
+Tools for summarizing Python codebases using caching and AST parsing.
+
+This module provides functionality to generate summaries for Python files and directories by leveraging AST parsing and caching mechanisms. It is designed to efficiently handle large codebases by summarizing files, directories, and the entire codebase, while minimizing redundant computations through caching.
+
+Functions:
+    - load_cache(cache_file: str) -> dict: Load summaries from a JSON cache.
+    - save_cache(cache: dict, cache_file: str): Save updated cache to disk.
+    - compute_sha256(filepath: str) -> str: Compute SHA-256 hash of a file.
+    - combine_hashes(hashes: list) -> str: Combine multiple hashes into one.
+    - count_tokens(text: str) -> int: Approximate token count for a text.
+    - chunk_text(text: str, chunk_size: int): Split text into token chunks.
+    - ast_parse_file(filepath: str) -> dict: Parse a Python file using AST.
+    - summarize_large_text(llm, text: str, chunk_label: str) -> str: Summarize large text by chunking.
+    - summarize_file_ast(llm, file_info: dict) -> str: Summarize a file using AST data.
+    - get_file_summary(llm, filepath: str, cache: dict, use_ast: bool) -> str: Return a cached or new summary for a file.
+    - summarize_directory(llm, dir_path: str, file_summaries: dict, cache: dict) -> str: Summarize a directory based on file summaries.
+    - build_documentation(root_dir: str, use_ast: bool) -> str: Main pipeline to summarize files, directories, and the entire codebase.
+"""
+
 import os
 import ast
 import hashlib
@@ -254,3 +274,4 @@ def build_documentation(root_dir: str, use_ast: bool = True) -> str:
 # Example usage:
 # final_doc = build_documentation("/path/to/repo", use_ast=True)
 # print(final_doc)
+
