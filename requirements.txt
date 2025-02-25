@@ -1,3 +1,4 @@
 openai==1.61.1
 pytest
 pylint
+tiktoken
