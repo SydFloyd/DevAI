@@ -27,6 +27,36 @@ def get_client():
 	)
 	return client
 
+def delete_vector_store(client, vector_store_id):
+    deleted_vector_store = client.beta.vector_stores.delete(
+        vector_store_id=vector_store_id
+    )
+    if deleted_vector_store.deleted:
+        print(f"Deleted vector store {vector_store_id}")
+    else:
+        print(f"Something went wrong deleting vector store {vector_store_id} and it wasn't deleted.")
+
+def make_vector_store(client, file_paths):
+    vector_store = client.beta.vector_stores.create(name="Codebase Resources")
+    
+    file_streams = [open(path, "rb") for path in file_paths]
+    file_batch = client.beta.vector_stores.file_batches.upload_and_poll(
+        vector_store_id=vector_store.id, files=file_streams
+    )
+
+    print(f"Vector store file upload status: {file_batch.status}")
+    print(f"Vector store # files: {file_batch.file_counts}")
+
+    return vector_store.id
+
+def provide_assistant_files(client, assistant_id, file_paths):
+    v_store = make_vector_store(client, file_paths)
+    assistant = client.beta.assistants.update(
+        assistant_id=assistant_id,
+        tool_resources={"file_search": {"vector_store_ids": [v_store]}}
+    )
+    return assistant.id, v_store
+
 def delete_assistant(client, assistant_id):
 	client.beta.assistants.delete(assistant_id)
 	print(f"Deleted assistant {assistant_id}")
@@ -38,7 +68,7 @@ def create_assistant(client):
 		instructions=cfg.ASSISTANT_INSTRUCTIONS,
 		name="Developer of DevAI",
 		tools=[{"type": "code_interpreter"}, *dev_tools],
-		model="gpt-4o",
+		model="gpt-4o"
 	)
 
 	return assistant.id
@@ -106,4 +136,4 @@ class LLM:
         self.temperature = temperature
         self.client = get_client()
     def prompt(self, prompt):
-        chat(self.client, prompt, system_message=self.system_message, temperature=self.temperature)
+        return chat(self.client, prompt, system_message=self.system_message, temperature=self.temperature)

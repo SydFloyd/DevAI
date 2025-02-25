@@ -20,8 +20,19 @@ Exceptions:
     - InvalidAssistantError: Raised when an invalid assistant ID is provided.
 """
 
+from src.doc.auto_document import update_documentation
+from src.doc.auto_docstring import DocstringUpdater
 from src.config import cfg
-from src.utils.openai_utils import execute_tools, submit_tools_and_get_run, get_client, create_assistant, delete_assistant, get_thread_messages
+from src.utils.openai_utils import (
+    execute_tools, 
+    submit_tools_and_get_run, 
+    get_client, 
+    create_assistant, 
+    delete_assistant, 
+    provide_assistant_files,
+    delete_vector_store,
+    get_thread_messages
+)
 
 def interact(client, assistant_id, thread_id):
     query = input(f"\n{cfg.agent_name}>> ")
@@ -67,8 +78,18 @@ def output_messages(client, run, thread_id):
         print(run.status)
 
 def main():
+    # first update codebase docs
+    updater = DocstringUpdater()
+    updater.update_docstrings_in_directory(cfg.project_root)
+
+    # update docs
+    docs_path = update_documentation(cfg.project_root)
+
     client = get_client()
+
     assistant_id = create_assistant(client)
+    assistant_id, vector_store = provide_assistant_files(client, assistant_id, docs_path)
+
     thread = client.beta.threads.create()
     try:
         while True:
@@ -78,10 +99,8 @@ def main():
                 break
     finally:
         delete_assistant(client, assistant_id)
-        print("Session is ended.\n")
+        delete_vector_store(client, vector_store)
+        print("Session ended.\n")
 
 if __name__ == "__main__":
     main()
-
-
-

@@ -164,16 +164,16 @@ class DocstringUpdater:
 
         :param directory: Path to the directory to traverse.
         """
+        print("Updating codebase docstrings...")
         for root, dirs, files in os.walk(directory):
             for file_name in files:
                 if file_name.endswith(".py"):
                     file_path = os.path.join(root, file_name)
                     self.update_docstring_in_file(file_path)
+        print("Done updating codebase docstrings...")
 
 
 # Example usage:
 # if __name__ == "__main__":
-#     llm = LLM(system_message="You are an expert Python docstring generator.")
-#     updater = DocstringUpdater(llm)
+#     updater = DocstringUpdater()
 #     updater.update_docstrings_in_directory("path/to/your/python/codebase")
-

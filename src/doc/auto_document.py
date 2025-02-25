@@ -239,8 +239,10 @@ def build_documentation(root_dir: str, use_ast: bool = True) -> str:
     for dir_path, files in dir_to_files.items():
         file_sums = {}
         for fpath in files:
+            print(f"Summarizing {fpath}...")
             file_sums[fpath] = get_file_summary(llm, fpath, cache, use_ast=use_ast)
 
+        print(f"Summarizing dir {dir_path}")
         directory_summary = summarize_directory(llm, dir_path, file_sums, cache)
         directory_summaries[dir_path] = directory_summary
 
@@ -271,7 +273,18 @@ def build_documentation(root_dir: str, use_ast: bool = True) -> str:
 
     return final_summary
 
-# Example usage:
-# final_doc = build_documentation("/path/to/repo", use_ast=True)
-# print(final_doc)
+def update_documentation(root_dir: str, use_ast: bool = True):
+    """
+    Regenerates the codebase documentation and saves it to 'docs.md' in the project root.
+    
+    :param root_dir: Path to the root directory of the project.
+    :param use_ast: If True, uses AST-based file summaries where possible.
+    """
+    print("Updating documentation...")
+    final_doc = build_documentation(root_dir, use_ast=use_ast)
+    docs_path = os.path.join(root_dir, "docs.md")
+    with open(docs_path, "w", encoding="utf-8") as f:
+        f.write(final_doc)
+    print(f"Documentation saved to {docs_path}.")
 
+    return docs_path
