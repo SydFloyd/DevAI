@@ -30,8 +30,7 @@ from src.utils.openai_utils import LLM
 
 if not os.path.exists("cache"):
     os.mkdir("cache")
-CACHE_FILE = "cache/summary_cache.json"
-IGNORED_DIRS = cfg.exclude_dirs
+CACHE_FILE = "cache/.summary_cache.json"
 
 CHUNK_SIZE = 32_000 # tokens
 
@@ -229,7 +228,7 @@ def build_documentation(root_dir: str, use_ast: bool = True) -> str:
     # Gather Python files
     dir_to_files = defaultdict(list)
     for dirpath, dirnames, filenames in os.walk(root_dir):
-        dirnames[:] = [d for d in dirnames if d not in IGNORED_DIRS]
+        dirnames[:] = [d for d in dirnames if d not in cfg.exclude_dirs]
         py_files = [os.path.join(dirpath, f) for f in filenames if f.endswith(".py")]
         if py_files:
             dir_to_files[dirpath].extend(py_files)

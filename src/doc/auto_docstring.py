@@ -16,6 +16,7 @@ import re
 import json
 import hashlib
 
+from src.config import cfg
 from src.utils.openai_utils import LLM
 
 
@@ -29,12 +30,14 @@ class DocstringUpdater:
         r'^"""(.*?)"""',
         flags=re.DOTALL
     )
-    HASH_DB_FILENAME = ".docstring_hashes.json"
+    HASH_DB_FILENAME = "cache/.docstring_cache.json"
 
     def __init__(self):
         """
         :param llm: An instance of the LLM class to generate docstrings.
         """
+        if not os.path.exists("cache"):
+            os.mkdir("cache")
         self.llm = LLM(system_message="You are an expert Python docstring generator.")
         self.hash_db = self._load_hash_db()
 
@@ -108,7 +111,10 @@ class DocstringUpdater:
         """
         prompt = (
             "Analyze the following Python code and produce a top-level docstring "
-            "that follows PEP257 and Python best practices:\n\n"
+            "that follows PEP257 and Python best practices.  The docstring should:"
+            " - Key classes/functions and their roles\n"
+            " - Notable dependencies/imports\n"
+            " - Overall purpose and functionality\n\n"
             f"{code}\n\n"
             "Docstring only (do not enclose in triple quotes)."
         )
@@ -166,6 +172,7 @@ class DocstringUpdater:
         """
         print("Updating codebase docstrings...")
         for root, dirs, files in os.walk(directory):
+            dirs[:] = [d for d in dirs if d not in cfg.exclude_dirs]
             for file_name in files:
                 if file_name.endswith(".py"):
                     file_path = os.path.join(root, file_name)
