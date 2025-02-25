@@ -1,24 +1,24 @@
 """
 Configuration management for application environment settings.
 
-This module provides a `config` class to manage environment-based configuration settings, including retrieving the OpenAI API key. It sets a default name and predefined instructions for an assistant agent, describing the agent's role as a senior software developer and guiding user interaction. The module also includes a method to generate a system message for the agent, providing context about the codebase environment. The `config` class is instantiated at the end of the module as `cfg`.
+This module provides a `Config` class to manage configuration settings based on the environment, such as retrieving the OpenAI API key and setting up an assistant agent with default instructions. It includes methods for generating system messages that provide context about the codebase environment. The `Config` class is instantiated at the end of the module as `cfg`.
 
 Classes:
-    - config: Manages application configuration settings, including API key retrieval, default agent name, and assistant instructions.
+    - Config: Manages application configuration settings, including API key retrieval, default agent name, and assistant instructions.
 
 Methods:
-    - get_sys_message() -> str: Generates a system message with context about the codebase, importing a function from another module to build the directory tree.
+    - get_sys_message() -> str: Generates a system message with context about the codebase, importing the `build_directory_tree` function from `src.tools.build_directory_tree`.
 
 Attributes:
     - agent_name: The default name assigned to the assistant agent.
-    - ASSISTANT_INSTRUCTIONS: A string detailing the role and expectations of the assistant agent.
-    - exclude_dirs: A list of directory names to exclude.
+    - ASSISTANT_INSTRUCTIONS: A string detailing the role and expectations of the assistant agent, including principles like DRY and SOLID.
+    - exclude_dirs: A set of directory names to exclude.
     - repository_url: The URL of the repository associated with the project.
     - exit_commands: A list of commands that trigger the exit of the application.
-    - project_root: The root directory of the project.
+    - project_root: The root directory of the project, created if it does not exist.
 
 Exceptions:
-    - AssertionError: Raised during the initialization of the `config` class if the OpenAI API key is not found in the environment variables.
+    - AssertionError: Raised during the initialization of the `Config` class if the OpenAI API key is not found in the environment variables.
 """
 
 import os
@@ -63,6 +63,9 @@ class config:
         return system_message
 
 cfg = config()
+
+
+
 
 
 

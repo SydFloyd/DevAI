@@ -1,3 +1,16 @@
+"""
+Module for generating structured documentation summaries of a codebase.
+
+This module provides functions to recursively analyze Python files in a directory, generate summaries for each file, and compile these into folder-level and codebase-level documentation. It leverages a language model to create concise and informative summaries of code components and their interactions.
+
+Functions:
+    - generate_file_summaries(client, root_dir): Summarizes each Python file in the specified directory.
+    - generate_subfolder_summaries(client, file_summaries): Produces summaries for each folder based on file summaries.
+    - generate_root_summary(client, intermediate_summaries): Compiles folder summaries into a comprehensive codebase summary.
+    - document_codebase(root_dir): Orchestrates the generation of the entire codebase documentation.
+    - save_codebase_doc(): Saves the generated documentation to a markdown file.
+"""
+
 import os
 from src.config import cfg
 from src.utils.openai_utils import get_client, chat
@@ -107,3 +120,4 @@ def save_codebase_doc():
     documentation = document_codebase(cfg.project_root)
     with open("docs.md", 'w') as f:
         f.write(documentation)
+
