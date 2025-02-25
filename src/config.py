@@ -34,7 +34,7 @@ class config:
             "You follow good coding principles like DRY and SOLID."
         )
 
-        self.exclude_dirs = [".venv", ".git", ".pytest_cache", "__pycache__"]
+        self.exclude_dirs = {".venv", "venv", "node_modules", "__pycache__", ".git", ".idea", ".vscode", ".pytest_cache"}
 
         self.agent_name = "DevAI"
         self.repository_url = "https://github.com/SydFloyd/DevAI"
