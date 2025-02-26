@@ -1,16 +1,16 @@
-"""
-Utilities for secure file writing and linting within project directories.
+"""Writes content to a specified file within a project, with sandboxing and optional linting.
 
-This module provides a function to safely write content to a file within a specified project root directory and perform linting on the written file using pylint. It ensures that files are not written outside the project root, handles errors such as writing to a directory, attempting to write outside the project root, and writing to excluded directories specified in the configuration. The module also creates the parent directory if it does not exist.
+This function takes a file path and content, ensuring the file is written within a specified project root directory, as defined in the configuration. It prevents writing outside the project directory or into excluded directories, and ensures the parent directory exists. If the file is a Python file, it performs linting using pylint.
 
-Functions:
-    - write_file(file_path: str, new_content: str, project_root: str = cfg.project_root) -> dict: Writes content to a file, ensures the parent directory exists, performs linting, and returns a dictionary with the success status and linting results or an error message.
+Key Functions:
+- `write_file`: Writes content to a file, with sandboxing and optional linting for Python files.
 
-Exceptions:
-    - ValueError: Raised when attempting to write a file outside the project root.
-    - IsADirectoryError: Raised when attempting to write to a directory instead of a file.
-    - PermissionError: Raised when attempting to write to an excluded directory.
-"""
+Notable Dependencies:
+- pathlib.Path: Used for resolving and manipulating filesystem paths.
+- subprocess: Utilized for running the pylint command on Python files.
+- src.config.cfg: Configuration module providing project settings, such as project root and excluded directories.
+
+Overall, this function ensures safe and controlled writing of files within a project structure, with additional linting for Python files to maintain code quality."""
 
 from pathlib import Path
 import subprocess

@@ -1,16 +1,13 @@
-"""
-Utilities for safely deleting files within a specified project root.
+"""This module provides functionality to delete a specified file from the project's directory structure. It ensures that file deletions occur only within the designated project root directory, enhancing security by preventing accidental or malicious deletions outside the intended scope.
 
-This module provides functionality to delete files while ensuring they reside within a given project root directory, preventing accidental deletion of files outside the designated project area. The module depends on `src.config.cfg` for configuration, specifically using `cfg.project_root` as the default project root.
+Key Function:
+- `delete_file(file_path: str, project_root: str = cfg.project_root) -> dict`: Attempts to delete the file specified by `file_path` relative to the `project_root`. Returns a dictionary indicating success or details of any error encountered.
 
-Functions:
-    - delete_file(file_path: str, project_root: str = cfg.project_root) -> dict: Deletes a specified file within the project root.
+Notable Dependencies:
+- `pathlib.Path`: Utilized for file path manipulations and to ensure cross-platform compatibility.
+- `src.config.cfg`: Imported configuration object that provides the default project root directory path. 
 
-Exceptions:
-    - ValueError: Raised when attempting to delete a file outside the project root.
-    - FileNotFoundError: Raised when the specified file does not exist.
-    - IsADirectoryError: Raised when the specified path is a directory instead of a file.
-"""
+The function ensures that the target path is a file, exists, and lies within the project root before performing the deletion. It handles various exceptions to provide informative error messages in the return dictionary."""
 
 from pathlib import Path
 from src.config import cfg

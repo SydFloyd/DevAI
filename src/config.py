@@ -1,25 +1,15 @@
-"""
-Configuration management for application environment settings.
+"""Initialize and configure an environment for the DevAI project, ensuring necessary settings and resources are available.
 
-This module provides a `Config` class to manage configuration settings based on the environment, such as retrieving the OpenAI API key and setting up an assistant agent with default instructions. It includes methods for generating system messages that provide context about the codebase environment. The `Config` class is instantiated at the end of the module as `cfg`.
+This module imports the `os` library to interact with the environment and filesystem.
 
 Classes:
-    - Config: Manages application configuration settings, including API key retrieval, default agent name, and assistant instructions.
+- `config`: Sets up the configuration for the DevAI project, including API keys, project instructions, directory exclusions, and system messages.
 
-Methods:
-    - get_sys_message() -> str: Generates a system message with context about the codebase, importing the `build_directory_tree` function from `src.tools.build_directory_tree`.
+Functions:
+- `config.__init__`: Initializes the configuration by obtaining the OpenAI API key from the environment and setting project-specific instructions and parameters. It also ensures the project root directory exists.
+- `config.get_sys_message`: Generates a system message that includes repository information, directory structure, and coding rules for contributing to the project.
 
-Attributes:
-    - agent_name: The default name assigned to the assistant agent.
-    - ASSISTANT_INSTRUCTIONS: A string detailing the role and expectations of the assistant agent, including principles like DRY and SOLID.
-    - exclude_dirs: A set of directory names to exclude.
-    - repository_url: The URL of the repository associated with the project.
-    - exit_commands: A list of commands that trigger the exit of the application.
-    - project_root: The root directory of the project, created if it does not exist.
-
-Exceptions:
-    - AssertionError: Raised during the initialization of the `Config` class if the OpenAI API key is not found in the environment variables.
-"""
+The `config` class ensures that the necessary environment settings are in place for the DevAI project, and it provides a method to generate system messages that guide developers in adhering to best practices while contributing to the codebase."""
 
 import os
 

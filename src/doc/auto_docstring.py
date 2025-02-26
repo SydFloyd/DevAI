@@ -1,15 +1,30 @@
-"""
-Tools for updating top-level docstrings in Python files.
+"""'''
+A module to update top-level docstrings in Python files based on detected changes.
 
-This module provides a class to detect changes in Python files, generate new docstrings for them using a language model, and update their top-level docstrings in place. It is useful for maintaining consistent and up-to-date documentation in codebases.
+This module provides the `DocstringUpdater` class, which automates the process of 
+analyzing Python files for changes, generating new docstrings using a language 
+model, and updating the files with the new docstrings.
 
-Classes:
-    - DocstringUpdater: Detects file changes, generates docstrings, and updates files.
+Key Classes:
+- `DocstringUpdater`: Detects changes in Python files, generates new top-level 
+  docstrings using an LLM (Language Model), and updates the files in place.
 
-Functions:
-    - update_docstring_in_file(file_path: str): Updates the top-level docstring of a single file.
-    - update_docstrings_in_directory(directory: str): Recursively updates docstrings in a directory.
-"""
+Notable Dependencies:
+- `os`: Used for directory and file operations.
+- `re`: Utilized for regex operations to identify existing docstrings.
+- `json`: Employed for reading and writing hash data to track file changes.
+- `hashlib`: Used to compute hashes of file contents for change detection.
+- `LLM` from `src.utils.openai_utils`: A language model used to generate docstrings.
+- `cfg` from `src.config`: Configuration settings, such as directories to exclude.
+
+Overall Purpose and Functionality:
+The main purpose of this module is to ensure the docstrings in Python files are
+up-to-date with the latest changes in the code. It does so by computing a hash 
+of the code (excluding existing docstrings), comparing it against stored hashes 
+to detect changes, and then using an LLM to generate and insert updated docstrings 
+where necessary. The `DocstringUpdater` class also provides functionality to 
+recursively update docstrings in all Python files within a specified directory.
+'''"""
 
 import os
 import re
@@ -126,7 +141,7 @@ class DocstringUpdater:
 
     def update_docstring_in_file(self, file_path: str):
         """
-        Checks if the file has changed; if so, generates a new top-level docstring
+        Checks if the code has changed; if so, generates a new top-level docstring
         and updates the file in place. Otherwise, skips.
 
         :param file_path: Path to the .py file to be updated.
@@ -135,34 +150,40 @@ class DocstringUpdater:
         with open(file_path, "r", encoding="utf-8") as f:
             content = f.read()
 
-        # Compute current hash
-        current_hash = self._compute_file_hash(content)
+        # Strip out the existing docstring
+        content_no_docstring = self._extract_code_without_top_level_docstring(content)
+
+        # Compute and compare hash of code-only content
+        current_code_hash = self._compute_file_hash(content_no_docstring)
         stored_hash = self.hash_db.get(file_path)
 
-        # If hashes match, skip processing
-        if stored_hash == current_hash:
-            print(f"No changes detected for {file_path}, skipping.")
+        if len(content_no_docstring.strip()) == 0:
+            print(f"No code found in {file_path}, skipping...")
             return
 
-        # Remove old top-level docstring
-        content_no_docstring = self._extract_code_without_top_level_docstring(content)
+        if stored_hash == current_code_hash:
+            print(f"No code changes detected for {file_path}, skipping.")
+            return
 
         # Generate a new docstring using the LLM
         new_docstring = self._generate_docstring_for_file(content_no_docstring)
 
-        # Insert the new docstring
+        # Insert the new docstring on top
         updated_content = self._insert_top_level_docstring(new_docstring, content_no_docstring)
 
-        # Write updated file
+        # Write updated file with new docstring
         with open(file_path, "w", encoding="utf-8") as f:
             f.write(updated_content)
 
-        # Update the file’s hash in the DB
-        new_hash = self._compute_file_hash(updated_content)
-        self.hash_db[file_path] = new_hash
+        # Now strip out the new docstring again and compute hash for the updated code
+        new_code_hash = self._compute_file_hash(
+            self._extract_code_without_top_level_docstring(updated_content)
+        )
+        self.hash_db[file_path] = new_code_hash
         self._save_hash_db()
 
         print(f"Updated docstring for {file_path}.")
+
 
     def update_docstrings_in_directory(self, directory: str):
         """

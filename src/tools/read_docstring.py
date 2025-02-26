@@ -1,17 +1,15 @@
-"""
-Utilities for reading and extracting docstrings from Python files.
+"""Reads and returns the module-level docstring of a Python file within a specified project root.
 
-This module provides functionality to safely read and extract the module-level docstring from a specified Python file, ensuring the file is within a given project root directory. It handles various exceptions to provide informative error messages, including general exceptions.
+This function attempts to read the module-level docstring from a Python file specified by `file_path`, ensuring that the file is located within the given `project_root`, which defaults to a configured project root directory. It uses the `ast` module to parse the file and extract the docstring, if present.
 
-Functions:
-    - read_docstring(file_path: str, project_root: str = cfg.project_root) -> dict: Extracts the module-level docstring from a Python file.
+Key elements:
+- `read_docstring`: Main function that performs the operations described above.
+- Dependencies: 
+  - `pathlib.Path`: Used for handling and resolving file paths.
+  - `ast`: Utilized to parse the Python file and retrieve the docstring.
+  - `src.config.cfg`: Provides the default project root directory.
 
-Exceptions:
-    - ValueError: Raised when attempting to access a file outside of the project root.
-    - FileNotFoundError: Raised when the specified file does not exist.
-    - IsADirectoryError: Raised when the specified path is a directory, not a file.
-    - Exception: Catches other unforeseen errors and provides a general error message.
-"""
+Returns a dictionary containing the docstring under the "docstring" key, or an "error" key with a descriptive message if any issue arises during the process, such as file not found, path being a directory, or access outside the project root."""
 
 from pathlib import Path
 import ast

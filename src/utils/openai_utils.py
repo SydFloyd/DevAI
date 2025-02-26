@@ -1,20 +1,24 @@
-"""
-Utilities for managing interactions with the OpenAI API, including assistant lifecycle, tool execution, and chat interactions.
+"""This module provides functionality to interact with the OpenAI API for creating and managing vector stores and assistants, as well as executing tools and handling chat operations. It includes methods to create, update, and delete vector stores and assistants, upload files to vector stores, execute tools, and manage chat interactions with a language model.
 
-This module provides functions to facilitate the integration of OpenAI's capabilities into applications by creating and deleting assistants, executing tools, managing thread messages, and enabling chat interactions with the OpenAI model. It ensures efficient handling of API interactions and tool execution workflows.
+Key classes and functions:
+- `LLM`: A class that initializes a language model client and facilitates prompting with a system message and temperature.
+- `get_client()`: Initializes and returns an OpenAI client using a configured API key.
+- `delete_vector_store(client, vector_store_id)`: Deletes a specified vector store and prints the status.
+- `make_vector_store(client, file_paths)`: Creates a vector store, uploads files, and returns the vector store ID.
+- `provide_assistant_files(client, assistant_id, file_paths)`: Associates files with an assistant by creating a vector store and updating the assistant.
+- `delete_assistant(client, assistant_id)`: Deletes a specified assistant.
+- `create_assistant(client)`: Creates a new assistant with specified instructions, name, tools, and model.
+- `execute_tools(client, run)`: Executes tool functions specified in a run's required actions and returns their outputs.
+- `submit_tools_and_get_run(client, run, tool_outputs, thread_id)`: Submits tool outputs for a run and polls for completion.
+- `get_thread_messages(client, thread)`: Retrieves messages from a specified thread.
+- `chat(client, query, model, messages, system_message, temperature)`: Facilitates chat with the language model using specified parameters.
 
-Functions:
-    - get_client() -> OpenAI: Initializes and returns an OpenAI client using the configured API key.
-    - delete_assistant(client: OpenAI, assistant_id: str): Deletes an assistant by its ID.
-    - create_assistant(client: OpenAI) -> str: Creates a new assistant with specified instructions and tools, returning its ID.
-    - execute_tools(client: OpenAI, run) -> List[Dict]: Executes specified tools and returns their outputs, handling exceptions during execution.
-    - submit_tools_and_get_run(client: OpenAI, run, tool_outputs: List[Dict], thread_id: str): Submits tool outputs and polls for run completion, handling submission errors.
-    - get_thread_messages(client: OpenAI, thread) -> List[Dict]: Retrieves messages from a specified thread.
-    - chat(client: OpenAI, query: str, model: str = "gpt-4o", messages: List[Dict] = [], system_message: str = None, temperature: float = 0.7) -> str: Facilitates chat interactions with the OpenAI model, returning the response text.
-
-Exceptions:
-    - General exceptions are caught and logged during tool execution and submission processes to ensure robustness.
-"""
+Notable dependencies:
+- `openai.OpenAI`: Provides the main interface for interacting with the OpenAI API.
+- `importlib`: Used for dynamic importing of tool modules.
+- `json`: Utilized for parsing JSON strings into Python objects.
+- `src.config.cfg`: Imports configuration settings such as API keys and assistant instructions.
+- `src.tools_schema.dev_tools`: Used for specifying development tools when creating assistants."""
 
 from openai import OpenAI
 from src.config import cfg

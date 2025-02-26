@@ -1,14 +1,21 @@
-"""
-Tests for validating the functionality of utility tools in the src/tools directory.
+"""Module for testing utility functions related to directory operations, file management, command execution, and docstring reading.
 
-This module contains test functions to verify the correct operation of various utility functions used for directory management, file operations, command execution, and docstring reading. These tests ensure that the tools perform as expected and handle errors gracefully, contributing to the robustness of the larger project.
+This script contains test functions for the following utilities:
+- `build_directory_tree`: Constructs and returns a directory tree structure.
+- `delete_file`: Deletes a specified file from the file system.
+- `execute_command`: Executes a command in the specified directory.
+- `read_docstring`: Reads and returns the docstring from a specified Python file.
 
-Functions:
-    - test_build_directory_tree(): Validates the build_directory_tree function.
-    - test_delete_file(): Checks the delete_file function for proper file deletion.
-    - test_execute_command(): Tests the execute_command function to ensure commands are executed correctly.
-    - test_read_docstring(): Verifies the read_docstring function's ability to read and return docstrings accurately.
-"""
+Notable dependencies include:
+- `os`: Used for interacting with the operating system, particularly for getting the current working directory.
+- `unittest.mock.patch`: Utilized for mocking user input during testing.
+- Utility functions imported from the `src.tools` package:
+  - `build_directory_tree`
+  - `delete_file`
+  - `execute_command`
+  - `read_docstring`
+
+Each function is tested for basic functionality and error handling. The script can be executed directly to run all tests."""
 
 import os
 from unittest.mock import patch

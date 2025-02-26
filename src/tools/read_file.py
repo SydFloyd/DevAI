@@ -1,16 +1,13 @@
-"""
-Utilities for securely reading files within a specified project root.
+"""Fetch and read the contents of a file within a specified project directory.
 
-This module provides functionality to read files while ensuring they reside within a defined project root directory, preventing unauthorized access to files outside this boundary. It is designed to enhance security by implementing basic sandboxing techniques. The module relies on the `src.config` for the `cfg.project_root` configuration, which is crucial for its operation.
+This module provides functionality to securely read files from a given path relative to a specified project root directory. The primary function, `read_file`, ensures that the file path is valid, exists, and is not a directory before reading its content. It returns the content of the file in a dictionary, or an error message if any issues are encountered.
 
-Functions:
-    - read_file(file_path: str, project_root: str = cfg.project_root) -> dict: Reads the content of a file if it exists within the project root, returning its content or an error message.
+Key functions:
+- `read_file`: Reads the content of a file specified by a relative file path. Validates that the file is within the project root directory, exists, and is not a directory.
 
-Exceptions:
-    - ValueError: Raised when attempting to access a file outside the project root.
-    - FileNotFoundError: Raised when the specified file does not exist.
-    - IsADirectoryError: Raised when the specified path is a directory, not a file.
-"""
+Notable imports:
+- `Path` from the `pathlib` module for handling and manipulating filesystem paths.
+- `cfg` from `src.config` to access project configuration settings, specifically the default project root directory."""
 
 from pathlib import Path
 from src.config import cfg

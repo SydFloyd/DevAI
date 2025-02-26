@@ -1,17 +1,15 @@
-"""
-Utilities for safely renaming and moving files within a project directory.
+"""Renames and moves a file within a specified project root directory.
 
-This module provides a function to rename and move files while ensuring operations are confined within a specified project root directory. The `project_root` parameter is configurable through the `cfg` module, allowing flexibility in defining the root directory. Comprehensive error handling is included to prevent operations on non-existent files, directories, or overwriting existing files.
+This function is designed to rename and move a file from a source path to a destination path, both of which must be within a predefined project root directory. It ensures that the operation is safe by checking if the source file exists and is not a directory, and that the destination path does not already exist to prevent overwriting.
 
-Functions:
-    - rename_move_file(source_path: str, destination_path: str, project_root: str = cfg.project_root) -> dict: Renames and moves a file from the source path to the destination path, ensuring both are within the project root. Returns a dictionary indicating success or containing an error message.
+Classes/Functions:
+- `rename_move_file`: Main function to rename and move a file safely within the project directory.
 
-Exceptions:
-    - ValueError: Raised when attempting to operate outside the project root.
-    - FileNotFoundError: Raised when the source file does not exist.
-    - IsADirectoryError: Raised when the source path is a directory instead of a file.
-    - FileExistsError: Raised when the destination file already exists.
-"""
+Notable Dependencies/Imports:
+- `pathlib.Path`: Used for handling and resolving file paths.
+- `src.config.cfg`: Configuration module providing the project root directory.
+
+Overall, this function provides a secure way to handle file renaming and moving operations within a controlled environment, enforcing constraints on path locations and file existence to avoid common file handling errors."""
 
 from pathlib import Path
 from src.config import cfg

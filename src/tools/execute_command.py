@@ -1,17 +1,17 @@
-"""
-Tool for secure execution of system commands with user consent.
+"""'''
+This module provides functionality to execute shell commands within a specified project root directory after obtaining user approval.
 
-This module provides functionality to execute shell commands within a specified project root directory, ensuring user awareness and approval before execution. It helps prevent unauthorized or accidental command execution by requiring explicit user consent.
+Key Functions:
+- execute_command: Executes a given shell command within a designated project root directory after user confirmation, ensuring the directory exists before execution.
 
-Functions:
-    - execute_command(command: str, project_root: str = cfg.project_root) -> str: Executes a given shell command in the specified or default project root directory after user approval and returns the result message.
+Notable Dependencies:
+- subprocess: Used for running shell commands and capturing their outputs.
+- os: Utilized for checking the existence and validity of the specified project root directory.
+- src.config.cfg: Imports configuration settings, specifically the default project root directory.
 
-Exceptions:
-    - ValueError: Raised when the specified project root is invalid.
-
-Note:
-    - Users should exercise caution when approving commands, as executing shell commands can impact system stability and security.
-"""
+Overall Purpose:
+The module is designed to facilitate secure execution of shell commands by prompting the user for approval and verifying the project root directory's existence. It is intended for situations where commands need to be executed within a specific directory context, such as project builds or deployments.
+'''"""
 
 import subprocess
 import os

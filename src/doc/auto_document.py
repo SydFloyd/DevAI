@@ -1,22 +1,25 @@
-"""
-Tools for summarizing Python codebases using caching and AST parsing.
+"""Module for generating and updating comprehensive documentation of a Python codebase using language models.
 
-This module provides functionality to generate summaries for Python files and directories by leveraging AST parsing and caching mechanisms. It is designed to efficiently handle large codebases by summarizing files, directories, and the entire codebase, while minimizing redundant computations through caching.
+This module provides functionality to:
+- Cache and retrieve summaries for files and directories to avoid redundant computations.
+- Compute SHA-256 hashes of files to detect changes and update summaries accordingly.
+- Parse Python files with Abstract Syntax Tree (AST) to extract structured information such as classes, functions, and imports.
+- Use a language model (LLM) to summarize large text data by chunking, if necessary, ensuring the summaries are cohesive and informative.
+- Generate documentation for individual files and directories, as well as the entire codebase, using a combination of AST parsing and full-text summarization.
 
-Functions:
-    - load_cache(cache_file: str) -> dict: Load summaries from a JSON cache.
-    - save_cache(cache: dict, cache_file: str): Save updated cache to disk.
-    - compute_sha256(filepath: str) -> str: Compute SHA-256 hash of a file.
-    - combine_hashes(hashes: list) -> str: Combine multiple hashes into one.
-    - count_tokens(text: str) -> int: Approximate token count for a text.
-    - chunk_text(text: str, chunk_size: int): Split text into token chunks.
-    - ast_parse_file(filepath: str) -> dict: Parse a Python file using AST.
-    - summarize_large_text(llm, text: str, chunk_label: str) -> str: Summarize large text by chunking.
-    - summarize_file_ast(llm, file_info: dict) -> str: Summarize a file using AST data.
-    - get_file_summary(llm, filepath: str, cache: dict, use_ast: bool) -> str: Return a cached or new summary for a file.
-    - summarize_directory(llm, dir_path: str, file_summaries: dict, cache: dict) -> str: Summarize a directory based on file summaries.
-    - build_documentation(root_dir: str, use_ast: bool) -> str: Main pipeline to summarize files, directories, and the entire codebase.
-"""
+Key functions and classes:
+- `load_cache` and `save_cache`: Manage local JSON cache for summaries.
+- `compute_sha256` and `combine_hashes`: Handle file and directory hash computations.
+- `count_tokens` and `chunk_text`: Approximate token counts and split text into manageable chunks.
+- `ast_parse_file`: Extract structured information from Python files using AST.
+- `summarize_large_text` and `summarize_file_ast`: Create summaries for text and AST-parsed file data.
+- `get_file_summary` and `summarize_directory`: Generate or retrieve summaries for files and directories.
+- `build_documentation` and `update_documentation`: Orchestrate the documentation process for the entire codebase.
+
+Dependencies:
+- `os`, `ast`, `hashlib`, `json`, `collections`: Standard libraries for file operations, hashing, JSON handling, and data structures.
+- `tiktoken`: External library for token encoding.
+- `src.config` and `src.utils.openai_utils`: Import configuration settings and language model utility functions."""
 
 import os
 import ast
@@ -241,7 +244,7 @@ def build_documentation(root_dir: str, use_ast: bool = True) -> str:
             print(f"Summarizing {fpath}...")
             file_sums[fpath] = get_file_summary(llm, fpath, cache, use_ast=use_ast)
 
-        print(f"Summarizing dir {dir_path}")
+        print(f"Summarizing dir {dir_path}...")
         directory_summary = summarize_directory(llm, dir_path, file_sums, cache)
         directory_summaries[dir_path] = directory_summary
 

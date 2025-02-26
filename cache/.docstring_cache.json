@@ -1,0 +1,18 @@
+{
+  ".\\main.py": "7cebb12d7089da0f38c3dca497aa9cd912656929d0d9296e662b6f87071dc325",
+  ".\\src\\config.py": "0760a8aa151be2c62b43fcdab276e479cd6be884458a96924f0710beb146242e",
+  ".\\src\\tools_schema.py": "9e36b9f783325a861da4838ac6dc12183bbbeb33765b1f862f371f6d8d2f01b6",
+  ".\\src\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  ".\\src\\doc\\auto_docstring.py": "7105890ac5c56628c5ff1cb8fdfeecd0ca551b184b67ed67f9e993082a8a3009",
+  ".\\src\\doc\\auto_document.py": "321668cee4df92aeb28606d25ec2a26224f108f897399c429a893d08247d90b2",
+  ".\\src\\tools\\build_directory_tree.py": "80b34cf4d897b3495bbeaecb7afc44730dbf3f197c0382af87be2240320f907c",
+  ".\\src\\tools\\delete_file.py": "86a9e4cf093f924fd205056620e9dd80ac1877c786380dc47827b24bfaf78c14",
+  ".\\src\\tools\\execute_command.py": "e43cf3e0dc210a1254b6c146ecc43f766444b5279cdf5e77acaa115119c24b76",
+  ".\\src\\tools\\read_docstring.py": "de6dd7e12077d852709df97dd30a0285be7d16210a5fb77a9611b76f23de6a46",
+  ".\\src\\tools\\read_file.py": "5695742af70f22437895e58a449b4b584037eb138ba4c9c77527caec8512dd1c",
+  ".\\src\\tools\\rename_move_file.py": "45942131b1ca6c709099055cf36f91d23cfc6587a2f75c61cac89d702eda3c1c",
+  ".\\src\\tools\\write_file.py": "aa1b879b3b3cbb096fe222c664b8dbdc8295df795f93724b7b2f1f6f6755358a",
+  ".\\src\\tools\\__init__.py": "c2cb56ebfcfa67a0427b0b7b9da26cbd5c30081eba0bd1282e731cab4c883208",
+  ".\\src\\utils\\openai_utils.py": "28707a7c0e93ad61b7714ec538da7ffd202e32bad2276ecebe7dc0b9ad64cd2b",
+  ".\\tests\\test_tools.py": "80c7e087f8a39090d83dad443a207ebd2c4cf0ca0c1dcc8b634fcea7f66bdd40"
+}

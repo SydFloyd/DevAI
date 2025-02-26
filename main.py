@@ -1,24 +1,15 @@
-"""
-Module for facilitating interactions with AI assistants using OpenAI's API.
+"""This module facilitates interaction with an AI assistant, allowing users to submit queries, receive responses, and update documentation automatically. Key components include:
 
-This module provides a comprehensive framework for creating, managing, and interacting with AI assistants, leveraging OpenAI's API to execute dynamic tools and handle user interactions. It supports concurrent interactions and real-time responses, making it suitable for complex workflows.
+- `interact`: Manages the interaction loop with the AI assistant, sending user queries and handling tool execution if required.
+- `output_messages`: Outputs the messages from the AI assistant based on the current run status.
+- `main`: Initializes the client and assistant, manages the session lifecycle, and optionally updates code documentation using `DocstringUpdater`.
 
-Functions:
-    - get_client() -> OpenAI: Initializes and returns a new OpenAI client using the configured API key.
-    - delete_assistant(client: OpenAI, assistant_id: str) -> None: Deletes an assistant by its ID and prints a confirmation message.
-    - create_assistant(client: OpenAI) -> str: Creates a new assistant with specified instructions and returns its ID.
-    - execute_tools(client: OpenAI, run) -> List[Dict]: Executes tools specified in a run configuration and collects their outputs.
-    - submit_tools_and_get_run(client: OpenAI, run, tool_outputs: List[Dict], thread_id: str) -> Run: Submits tool outputs and retrieves the updated run status.
-    - interact(client: OpenAI, assistant_id: str, thread_id: str) -> bool: Manages user interaction and tool execution within a thread, using `cfg.get_sys_message()` to construct requests.
-    - output_messages(client: OpenAI, run, thread_id: str) -> None: Prints the role and content of the first message from a thread if the run is completed; otherwise, prints the current run status.
-    - get_thread_messages(client: OpenAI, thread) -> List[Dict]: Retrieves and returns messages from a specified thread.
-    - main() -> None: Initializes the assistant, creates a thread using `client.beta.threads.create()`, runs an interaction loop, and ensures cleanup of resources.
+Notable dependencies:
+- `update_documentation` from `src.doc.auto_document` for regenerating documentation.
+- `DocstringUpdater` from `src.doc.auto_docstring` for updating docstrings within the project.
+- Various utilities from `src.utils.openai_utils` for assistant and client management, including `execute_tools`, `submit_tools_and_get_run`, and others.
 
-Exceptions:
-    - ConnectionError: Raised when there are issues connecting to the OpenAI API.
-    - ToolExecutionError: Raised when a tool fails to execute properly.
-    - InvalidAssistantError: Raised when an invalid assistant ID is provided.
-"""
+The script relies on a configuration module `src.config` to access setup parameters such as `agent_name`, `exit_commands`, and `project_root`. It provides a command-line interface for user interaction and documentation maintenance."""
 
 from src.doc.auto_document import update_documentation
 from src.doc.auto_docstring import DocstringUpdater
@@ -78,17 +69,19 @@ def output_messages(client, run, thread_id):
         print(run.status)
 
 def main():
-    # first update codebase docs
-    updater = DocstringUpdater()
-    updater.update_docstrings_in_directory(cfg.project_root)
+    update_docs = input("Regenerate documentation? (y/n)")
+    if update_docs.lower().strip() == "y":
+        # update codebase docs
+        updater = DocstringUpdater()
+        updater.update_docstrings_in_directory(cfg.project_root)
 
-    # update docs
-    docs_path = update_documentation(cfg.project_root)
+        # update docs
+        docs_path = update_documentation(cfg.project_root)
 
     client = get_client()
 
     assistant_id = create_assistant(client)
-    assistant_id, vector_store = provide_assistant_files(client, assistant_id, docs_path)
+    assistant_id, vector_store = provide_assistant_files(client, assistant_id, ["docs.md"])
 
     thread = client.beta.threads.create()
     try:

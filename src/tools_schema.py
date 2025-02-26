@@ -1,21 +1,20 @@
-"""
-File and directory management utilities.
+"""This module provides a collection of tools designed to perform various file and directory operations as well as command execution tasks. It includes functionalities to build directory trees, read and write file contents, delete and rename files, and execute system commands. The main components are:
 
-This module offers a suite of functions for performing operations on files and directories,
-including reading, writing, deleting, renaming, and displaying directory structures. It also
-provides functionality to extract docstrings from Python files, making it useful for
-development and file manipulation tasks.
+- `build_directory_tree`: A function to generate and view the directory tree of a specified project directory.
 
-Functions:
-    - build_directory_tree: Displays the directory tree of the project directory.
-    - read_file(file_path: str) -> str: Reads the contents of a file at the specified path.
-    - write_file(file_path: str, new_content: str): Writes or overwrites a file with new content.
-    - delete_file(file_path: str): Deletes a file at the specified file path.
-    - rename_move_file(source_path: str, destination_path: str): Renames or moves a file from a
-      source path to a destination path.
-    - read_docstring(file_path: str) -> str: Reads the top-level docstring from a given Python
-      file.
-"""
+- `read_file`: A function to read the contents of a file given its path. It requires the parameter `file_path` which specifies the location of the file to be read.
+
+- `write_file`: A function that writes or overwrites a file with new content. If the file is a Python file, it automatically returns linting information. It requires `file_path` and `new_content` parameters.
+
+- `delete_file`: A function to delete a file at a specified path. It requires the `file_path` parameter.
+
+- `rename_move_file`: A function to rename or move a file from a source path to a destination path. It requires `source_path` and `destination_path` parameters.
+
+- `read_docstring`: A function to read the top-level docstring from a given Python file. It requires the `file_path` parameter.
+
+- `execute_command`: A function to execute a command on the machine after obtaining user approval. It requires the `command` parameter.
+
+These tools collectively facilitate file management and command execution, making them useful for development and scripting tasks."""
 
 directory_tool = {
     "type": "function",
