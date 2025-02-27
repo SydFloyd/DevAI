@@ -1,99 +1,109 @@
-"""This module facilitates interaction with an AI assistant, allowing users to submit queries, receive responses, and update documentation automatically. Key components include:
+"""Manage interactive sessions with an AI assistant using OpenAI's API.
 
-- `interact`: Manages the interaction loop with the AI assistant, sending user queries and handling tool execution if required.
-- `output_messages`: Outputs the messages from the AI assistant based on the current run status.
-- `main`: Initializes the client and assistant, manages the session lifecycle, and optionally updates code documentation using `DocstringUpdater`.
+This module provides functionality to manage interactive sessions with an AI assistant using OpenAI's API. It includes the ability to set up and tear down sessions, interact with the assistant through user input, and handle the assistant's responses.
 
-Notable dependencies:
-- `update_documentation` from `src.doc.auto_document` for regenerating documentation.
-- `DocstringUpdater` from `src.doc.auto_docstring` for updating docstrings within the project.
-- Various utilities from `src.utils.openai_utils` for assistant and client management, including `execute_tools`, `submit_tools_and_get_run`, and others.
+Key Classes and Functions:
+- `SessionManager`: A class that manages the lifecycle of a session, including setup, interaction, and teardown.
+  - `__init__`: Initializes the session with an OpenAI client.
+  - `setup`: Sets up the assistant and a thread for interaction, returning a vector store.
+  - `interact`: Facilitates continuous interaction with the assistant, handling user queries and assistant responses.
+  - `output_messages`: Outputs messages from the assistant, based on the current run status.
+  - `teardown`: Cleans up resources by deleting the assistant and vector store.
+- `main`: The main function to initiate the session manager and optionally update documentation.
 
-The script relies on a configuration module `src.config` to access setup parameters such as `agent_name`, `exit_commands`, and `project_root`. It provides a command-line interface for user interaction and documentation maintenance."""
+Notable Dependencies/Imports:
+- `OpenAIClient`: From `src.utils.openai_utils`, used to interact with OpenAI's API.
+- `update_documentation`: From `src.doc.auto_document`, used to update documentation.
+- `DocstringUpdater`: From `src.doc.auto_docstring`, used to update docstrings in the codebase.
+- `cfg`: From `src.config`, used for configuration settings such as API keys and project paths."""
 
 from src.doc.auto_document import update_documentation
 from src.doc.auto_docstring import DocstringUpdater
 from src.config import cfg
-from src.utils.openai_utils import (
-    execute_tools, 
-    submit_tools_and_get_run, 
-    get_client, 
-    create_assistant, 
-    delete_assistant, 
-    provide_assistant_files,
-    delete_vector_store,
-    get_thread_messages
-)
+from src.utils.openai_utils import OpenAIClient
 
-def interact(client, assistant_id, thread_id):
-    query = input(f"\n{cfg.agent_name}>> ")
+class SessionManager:
+	def __init__(self):
+		self.client = OpenAIClient(api_key=cfg.openai_api_key)
+		self.assistant_id = None
+		self.thread_id = None
 
-    # check for exit
-    if query.strip().lower() in cfg.exit_commands:
-        return True
+	def setup(self):
+		self.assistant_id = self.client.create_assistant()
+		self.assistant_id, vector_store = self.client.provide_assistant_files(self.assistant_id, ["docs.md"])
+		thread = self.client.client.beta.threads.create()
+		self.thread_id = thread.id
+		return vector_store
 
-    request = cfg.get_sys_message() + query
-    message = client.beta.threads.messages.create(
-        thread_id=thread_id,
-        role="user",
-        content=request,
-    )
+	def interact(self):
+		while True:
+			query = input(f"\n{cfg.agent_name}>> ")
+			# check for exit
+			if query.strip().lower() in cfg.exit_commands:
+				return True
 
-    run = client.beta.threads.runs.create_and_poll(
-        thread_id=thread_id,
-        assistant_id=assistant_id,
-    )
+			request = cfg.get_sys_message() + query
+			message = self.client.client.beta.threads.messages.create(
+				thread_id=self.thread_id,
+				role="user",
+				content=request,
+			)
 
-    while run.status == 'requires_action':
-        tool_outputs = execute_tools(client, run)
-        if tool_outputs:
-            run = submit_tools_and_get_run(client, run, tool_outputs, thread_id)
-            print("Tool outputs submitted successfully.")
-        else:
-            print("No tool outputs to submit.")
-            break
+			run = self.client.client.beta.threads.runs.create_and_poll(
+				thread_id=self.thread_id,
+				assistant_id=self.assistant_id,
+			)
 
-    output_messages(client, run, thread_id)
+			while run.status == 'requires_action':
+				tool_outputs = self.client.execute_tools(run)
+				if tool_outputs:
+					run = self.client.submit_tools_and_get_run(run, tool_outputs, self.thread_id)
+					print("Tool outputs submitted successfully.")
+				else:
+					print("No tool outputs to submit.")
+					break
 
-    return False
+			self.output_messages(run)
+			return False
 
-def output_messages(client, run, thread_id):
-    if run.status == 'completed':
-        messages = client.beta.threads.messages.list(thread_id=thread_id)
-        for message in messages:
-            print(message.role + ":")
-            for c in message.content:
-                print(c.text.value)
-            break
-    else:
-        print(run.status)
+	def output_messages(self, run):
+		if run.status == 'completed':
+			messages = self.client.client.beta.threads.messages.list(thread_id=self.thread_id)
+			for message in messages:
+				print(message.role + ":")
+				for c in message.content:
+					print(c.text.value)
+				break
+		else:
+			print(run.status)
+
+	def teardown(self, vector_store):
+		self.client.delete_assistant(self.assistant_id)
+		self.client.delete_vector_store(vector_store)
+		print("Session ended.\n")
+
 
 def main():
-    update_docs = input("Regenerate documentation? (y/n)")
-    if update_docs.lower().strip() == "y":
-        # update codebase docs
-        updater = DocstringUpdater()
-        updater.update_docstrings_in_directory(cfg.project_root)
+	update_docs = input("Regenerate documentation? (y/n)")
+	if update_docs.lower().strip() == "y":
+		# update codebase docs
+		updater = DocstringUpdater()
+		updater.update_docstrings_in_directory(cfg.project_root)
 
-        # update docs
-        docs_path = update_documentation(cfg.project_root)
+		# update docs
+		docs_path = update_documentation(cfg.project_root)
 
-    client = get_client()
+	manager = SessionManager()
+	vector_store = manager.setup()
 
-    assistant_id = create_assistant(client)
-    assistant_id, vector_store = provide_assistant_files(client, assistant_id, ["docs.md"])
+	try:
+		while True:
+			quit = manager.interact()
+			if quit:
+				break
+	finally:
+		manager.teardown(vector_store)
 
-    thread = client.beta.threads.create()
-    try:
-        while True:
-            # print(get_thread_messages(client, thread))
-            quit = interact(client, assistant_id, thread.id)
-            if quit:
-                break
-    finally:
-        delete_assistant(client, assistant_id)
-        delete_vector_store(client, vector_store)
-        print("Session ended.\n")
 
 if __name__ == "__main__":
-    main()
+	main()

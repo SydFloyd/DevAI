@@ -163,7 +163,9 @@ def get_file_summary(llm, filepath: str, cache: dict, use_ast=True) -> str:
 
     # Reuse cached summary if file hash is unchanged
     if cached_entry and cached_entry["hash"] == file_hash:
+        print(f"No changes detected in {filepath}; using cached summary.")
         return cached_entry["summary"]
+    print(f"Summarizing {filepath}...")
 
     # Otherwise, summarize anew
     if use_ast:
@@ -201,7 +203,9 @@ def summarize_directory(llm, dir_path: str, file_summaries: dict, cache: dict) -
     # Reuse cached directory summary if hash is unchanged
     cached_entry = cache["directories"].get(dir_path)
     if cached_entry and cached_entry["dir_hash"] == dir_hash:
+        print(f"No changes detected in {dir_path}; using cached summary.")
         return cached_entry["summary"]
+    print(f"Summarizing {dir_path}...")
 
     # Build a single text that includes each file-level summary
     prompt_parts = []
@@ -241,10 +245,8 @@ def build_documentation(root_dir: str, use_ast: bool = True) -> str:
     for dir_path, files in dir_to_files.items():
         file_sums = {}
         for fpath in files:
-            print(f"Summarizing {fpath}...")
             file_sums[fpath] = get_file_summary(llm, fpath, cache, use_ast=use_ast)
 
-        print(f"Summarizing dir {dir_path}...")
         directory_summary = summarize_directory(llm, dir_path, file_sums, cache)
         directory_summaries[dir_path] = directory_summary
 
