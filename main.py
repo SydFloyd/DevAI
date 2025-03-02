@@ -17,17 +17,18 @@ Notable Dependencies/Imports:
 - `DocstringUpdater`: From `src.doc.auto_docstring`, used to update docstrings in the codebase.
 - `cfg`: From `src.config`, used for configuration settings such as API keys and project paths."""
 
-from src.doc.auto_document import update_documentation
-from src.doc.auto_docstring import DocstringUpdater
+from src.doc import auto_doc
 from src.config import cfg
 from src.utils.openai_utils import OpenAIClient
 
 class SessionManager:
-	def __init__(self):
+	def __init__(self, input_handler=input, output_handler=print):
 		self.client = OpenAIClient(api_key=cfg.openai_api_key)
 		self.assistant_id = None
 		self.thread_id = None
-
+		self.input_handler = input_handler
+		self.output_handler = output_handler
+	
 	def setup(self):
 		self.assistant_id = self.client.create_assistant()
 		self.assistant_id, vector_store = self.client.provide_assistant_files(self.assistant_id, ["docs.md"])
@@ -37,11 +38,9 @@ class SessionManager:
 
 	def interact(self):
 		while True:
-			query = input(f"\n{cfg.agent_name}>> ")
-			# check for exit
+			query = self.input_handler(f"\n{cfg.agent_name}>> ")
 			if query.strip().lower() in cfg.exit_commands:
 				return True
-
 			request = cfg.get_sys_message() + query
 			message = self.client.client.beta.threads.messages.create(
 				thread_id=self.thread_id,
@@ -58,11 +57,11 @@ class SessionManager:
 				tool_outputs = self.client.execute_tools(run)
 				if tool_outputs:
 					run = self.client.submit_tools_and_get_run(run, tool_outputs, self.thread_id)
-					print("Tool outputs submitted successfully.")
+					self.output_handler("Tool outputs submitted successfully.")
 				else:
-					print("No tool outputs to submit.")
+					self.output_handler("No tool outputs to submit.")
 					break
-
+			
 			self.output_messages(run)
 			return False
 
@@ -70,36 +69,31 @@ class SessionManager:
 		if run.status == 'completed':
 			messages = self.client.client.beta.threads.messages.list(thread_id=self.thread_id)
 			for message in messages:
-				print(message.role + ":")
+				self.output_handler(message.role + ":")
 				for c in message.content:
-					print(c.text.value)
+					self.output_handler(c.text.value)
 				break
 		else:
-			print(run.status)
+			self.output_handler(run.status)
 
 	def teardown(self, vector_store):
 		self.client.delete_assistant(self.assistant_id)
 		self.client.delete_vector_store(vector_store)
-		print("Session ended.\n")
+		self.output_handler("Session ended.\n")
 
 
 def main():
 	update_docs = input("Regenerate documentation? (y/n)")
 	if update_docs.lower().strip() == "y":
-		# update codebase docs
-		updater = DocstringUpdater()
-		updater.update_docstrings_in_directory(cfg.project_root)
-
-		# update docs
-		docs_path = update_documentation(cfg.project_root)
+		auto_doc(cfg.project_root, update_file_docstrings=True)
 
 	manager = SessionManager()
 	vector_store = manager.setup()
 
 	try:
 		while True:
-			quit = manager.interact()
-			if quit:
+			exit_interaction = manager.interact()
+			if exit_interaction:
 				break
 	finally:
 		manager.teardown(vector_store)

@@ -277,7 +277,7 @@ def build_documentation(root_dir: str, use_ast: bool = True) -> str:
 
     return final_summary
 
-def update_documentation(root_dir: str, use_ast: bool = True):
+def update_documentation(root_dir: str, doc_output_path: str = "docs.md", use_ast: bool = True):
     """
     Regenerates the codebase documentation and saves it to 'docs.md' in the project root.
     
@@ -286,7 +286,7 @@ def update_documentation(root_dir: str, use_ast: bool = True):
     """
     print("Updating documentation...")
     final_doc = build_documentation(root_dir, use_ast=use_ast)
-    docs_path = os.path.join(root_dir, "docs.md")
+    docs_path = os.path.join(root_dir, doc_output_path)
     with open(docs_path, "w", encoding="utf-8") as f:
         f.write(final_doc)
     print(f"Documentation saved to {docs_path}.")

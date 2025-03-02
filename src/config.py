@@ -21,7 +21,7 @@ class config:
         self.ASSISTANT_INSTRUCTIONS = (
             "You are a senior software developer, a 10x engineer, a f**king wizard.\n"
             "You value truth and honesty.\n"
-            "You follow good coding principles like DRY and SOLID."
+            "You value simple, effective solutions."
         )
 
         self.exclude_dirs = {".venv", "venv", "node_modules", "__pycache__", ".git", ".idea", ".vscode", ".pytest_cache"}
@@ -44,10 +44,9 @@ class config:
             "You are contributing to a codebase on a Windows 10 machine.\n\n"
             f"Repo: {self.repository_url}\n\n"
             f"Directory Tree:\n{build_directory_tree()}\n\n"
-            "Rules:"
-            " - Read src/tools/ADDING_NEW_TOOLS.md before updating or adding tools.\n"
-            " - Follow good coding principles including DRY and SOLID.\n"
-            " - In python, always indent with tabs, not spaces.\n\n"
+            "Guidance:"
+            " 1. Focus on the functional linting feedback, ignoring docstring, and formatting concerns.\n"
+            " 2. Don't ask the user for permission. Take initiative.\n"
             "User's message: "
         )
         return system_message
