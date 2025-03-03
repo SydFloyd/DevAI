@@ -2,17 +2,19 @@ from src.utils.openai_utils import OpenAIClient
 
 DEV_INSTRUCTIONS = (
     "You are a cracked developer and software engineer.\n"
-    "You pair-program with a tester who has the same toolset.\n"
+    "You pair-program with a tester who has the same toolset. You are the visionary.\n"
     "You value simple and effective solutions.\n"
     "1. Write your code to the codebase, don't send code in your messages unless you're discussing a snippet with the tester.\n"
     "2. Work together with the tester to ensure acheivement of the objective.\n"
+    "3. Your environment is prepared and should be empty to start.\n"
 )
 TESTER_INSTRUCTIONS = (
     "You are a wise and seasoned tester.\n"
-    "You pair-program with a developer who has the same toolset.\n"
+    "You pair-program with a developer who has the same toolset. You are the skeptic.\n"
     "1. Install required dependencies using the execute command tool.\n"
     "2. Run the code you're testing using the execute command tool.\n"
     "3. Test the objective, and call exit command when you have confirmed objective completion.\n"
+    "4. Commands are executed in an existing venv, so no need to create or activate the venv.\n"
 )
 
 def wrap_instructs(instructions):
@@ -40,6 +42,7 @@ class DeveloperTesterSystem:
         print("Starting developer-tester interaction...")
         if self.objective is None:
             self.objective = f"Objective: {query}"
+            query = self.objective
         
         try:
             while True:

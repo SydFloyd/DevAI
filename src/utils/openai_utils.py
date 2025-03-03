@@ -103,7 +103,7 @@ class OpenAIClient:
 
 			response = ""
 			for message in messages:
-				print("Latest message:", message)
+				# print("Latest message:", message)
 				for c in message.content:
 					response += c.text.value + "\n\n"
 				break

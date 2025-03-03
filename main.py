@@ -5,6 +5,7 @@ from src.config import cfg
 
 dev_test = DeveloperTesterSystem(OpenAIClient(cfg.openai_api_key), dev_tools, test_tools)
 
-query = "Create a basic demonstration of machine learning classification problem.  Use a classic dataset, but not iris."
+# query = "Train a NN to balance a simulated swinging arm upright.  Review the existing foundation code and iterate until the model is successful.  Use pytorch, not tensorflow."
+query = "Given the existing codebase which is for training an NN to balance a swinging arm upright, create a script that lets a user run the simulation with some keybindings for the actions."
 
 dev_test.run(query)

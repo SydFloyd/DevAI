@@ -1,4 +1,4 @@
-def exit(final_report):
+def exit(test_summary):
     print("Agent has triggered exit!")
     print("Final report:\n\n")
-    print(final_report)
+    print(test_summary)

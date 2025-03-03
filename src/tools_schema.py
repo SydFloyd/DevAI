@@ -182,8 +182,11 @@ dev_tools = [
 ]
 
 test_tools = [
-    directory_tool,
-    read_file_tool,
-    execute_command_tool,
     exit_tool,
+    execute_command_tool,
+    read_file_tool,
+    write_file_tool,
+    delete_file_tool,
+    rename_move_file_tool,
+    directory_tool,
 ]
