@@ -38,6 +38,7 @@ def execute_command(command, project_root = cfg.project_root):
 
     try:
         result = subprocess.run(command, shell=True, check=True, capture_output=True, text=True, cwd=project_root)
+        print("Execute cmd output:", result.stdout)
         return f"Command executed successfully: {result.stdout}"
     except subprocess.CalledProcessError as e:
         return f"An error occurred while executing the command: {e.stderr or e}"

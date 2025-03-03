@@ -18,7 +18,8 @@ def build_directory_tree(start_path=cfg.project_root, exclude_dirs=cfg.exclude_d
     lines = []
 
     # Print the root directory name at the top
-    lines.append(start_path.rstrip("/"))
+    # lines.append(start_path.rstrip("/"))
+    lines.append(".")
 
     def _build_tree(current_path, prefix=""):
         try:
