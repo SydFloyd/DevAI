@@ -28,7 +28,7 @@ class DeveloperTesterSystem:
         )
         self.tester_id = self.client.create_assistant(
             name="Tester Assistant",
-            assistant_instructions="You are a tester talking to a developer. Verify whether their implementation meets the objectives.",
+            assistant_instructions=TESTER_INSTRUCTIONS,
             tools=tester_tools,
         )
         self.developer_thread_id = self.client.create_thread()
