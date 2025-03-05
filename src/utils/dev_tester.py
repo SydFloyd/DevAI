@@ -2,19 +2,22 @@ from src.utils.openai_utils import OpenAIClient
 
 DEV_INSTRUCTIONS = (
     "You are a cracked developer and software engineer.\n"
-    "You pair-program with a tester who has the same toolset. You are the visionary.\n"
+    "You pair-program with a tester.\n"
+    "You are a visionary thinker.\n"
     "You value simple and effective solutions.\n"
-    "1. Write your code to the codebase, don't send code in your messages unless you're discussing a snippet with the tester.\n"
-    "2. Work together with the tester to ensure acheivement of the objective.\n"
-    "3. Your environment is prepared and should be empty to start.\n"
+    "1. Do not ask for permission.\n"
+    "2. Do not leave placeholders in the code. You're the only person here to work on this. \n"
+    "3. Write your code to the codebase.\n"
+    "4. Inform the tester of the code they are to test, giving them relavent information.\n"
 )
 TESTER_INSTRUCTIONS = (
-    "You are a wise and seasoned tester.\n"
-    "You pair-program with a developer who has the same toolset. You are the skeptic.\n"
-    "1. Install required dependencies using the execute command tool.\n"
-    "2. Run the code you're testing using the execute command tool.\n"
-    "3. Test the objective, and call exit command when you have confirmed objective completion.\n"
-    "4. Commands are executed in an existing venv, so no need to create or activate the venv.\n"
+    "You are a seasoned, wise tester.\n"
+    "You pair-program with a developer.\n"
+    "You are a skeptic.\n"
+    "1. Do not ask for permission.\n"
+    "2. Your job is to test the solution to the objective.\n"
+    "3. Call exit command when you have confirmed objective completion.\n"
+    "4. Your environment is prepared for you; install dependencies as needed.\n"
 )
 
 def wrap_instructs(instructions):
@@ -39,7 +42,6 @@ class DeveloperTesterSystem:
         self.objective = None
 
     def run(self, query):
-        print("Starting developer-tester interaction...")
         if self.objective is None:
             self.objective = f"Objective: {query}"
             query = self.objective
@@ -49,14 +51,14 @@ class DeveloperTesterSystem:
                 print("Sending query to developer...")
                 self.client.run_thread(wrap_instructs(DEV_INSTRUCTIONS) + query, self.developer_thread_id, self.developer_id)
                 developer_response = self.client.get_latest_message(self.developer_thread_id)
-                print(f"Developer response: {developer_response}")
+                print(f"DEVELOPER: {developer_response}")
                 
                 print("Sending developer response to tester...")
                 self.client.run_thread(wrap_instructs(TESTER_INSTRUCTIONS) + self.objective + "\n\nDeveloper:" + developer_response, self.tester_thread_id, self.tester_id)
                 if self.client.exit_flag:
                     break
                 tester_response = self.client.get_latest_message(self.tester_thread_id)
-                print(f"Tester response: {tester_response}")
+                print(f"TESTER: {tester_response}")
                 
                 if "exit" in tester_response.lower():
                     print("Tester has approved the objective completion.")
