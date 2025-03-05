@@ -134,21 +134,36 @@ class OpenAIClient:
 		except Exception as e:
 			print(f"Error deleting thread: {e}")
 
-	def chat(self, query, model="gpt-4o", messages=[], system_message=None, temperature=0.7):
+	def chat(self, 
+		  	 query, 
+			 model="gpt-4o", 
+			 messages=[], 
+			 system_message=None, 
+			 temperature=0.7,
+			 response_format=None):
 		if system_message:
 			messages = [{"role": "developer", "content": system_message}] + messages
 
 		messages = messages + [{"role": "user", "content": query}]
 
-		completion = self.client.chat.completions.create(model=model, messages=messages, temperature=temperature)
+		if not response_format:
+			completion = self.client.chat.completions.create(model=model, 
+															 messages=messages, 
+															 temperature=temperature)
 
-		message = completion.choices[0].message
-		text = message.content
-		refusal = message.refusal
-		if refusal is not None:
-			print(f"There was a refusal! {str(refusal)}")
+			message = completion.choices[0].message
+			text = message.content
+			refusal = message.refusal
+			if refusal is not None:
+				print(f"There was a refusal! {str(refusal)}")
 
-		return text
+			return text
+		else:
+			completion = self.client.beta.chat.completions.parse(model=model,
+																 messages=messages, 
+																 temperature=temperature, 
+																 response_format=response_format)
+			return completion.choices[0].message.parsed
 
 
 class LLM:
