@@ -44,6 +44,28 @@ class OpenAIClient:
 	def create_thread(self):
 		thread = self.client.beta.threads.create()
 		return thread.id
+	
+	def _make_vector_store(self, file_paths):
+		try:
+			vector_store = self.client.beta.vector_stores.create(name="Codebase Resources")
+			with_exit_context = [open(path, "rb") for path in file_paths]
+			file_batch = self.client.beta.vector_stores.file_batches.upload_and_poll(vector_store_id=vector_store.id, files=with_exit_context)
+			print(f"Vector store file upload status: {file_batch.status}")
+			print(f"Vector store # files: {file_batch.file_counts}")
+			return vector_store.id
+		except Exception as e:
+			print(f"Error creating vector store: {e}")
+		finally:
+			for file in with_exit_context:
+				file.close()
+
+	def provide_assistant_files(self, assistant_id, file_paths):
+		v_store = self._make_vector_store(file_paths)
+		try:
+			assistant = self.client.beta.assistants.update(assistant_id=assistant_id, tool_resources={"file_search": {"vector_store_ids": [v_store]}})
+			return assistant.id, v_store
+		except Exception as e:
+			print(f"Error updating assistant {assistant_id}: {e}")
 
 	def _execute_tools(self, run):
 		tool_outputs = []
@@ -51,7 +73,7 @@ class OpenAIClient:
 			for tool in run.required_action.submit_tool_outputs.tool_calls:
 				function_name = tool.function.name
 				function_args = tool.function.arguments
-				if function_name == 'exit':
+				if function_name == 'terminate_session':
 					self.exit_flag = True
 				self.output_handler(f"{function_name} called...")
 				try:
@@ -65,7 +87,7 @@ class OpenAIClient:
 					print(f"Error executing {function_name}: {e}")
 		return tool_outputs
 
-	def _submit_tools_and_get_run(self, run, tool_outputs, thread_id):
+	def submit_tools_and_get_run(self, run, tool_outputs, thread_id):
 		try:
 			return self.client.beta.threads.runs.submit_tool_outputs_and_poll(thread_id=thread_id, run_id=run.id, tool_outputs=tool_outputs)
 		except Exception as e:
@@ -73,25 +95,31 @@ class OpenAIClient:
 			return run
 	
 	def run_thread(self, query, thread_id, assistant_id):
+		# adds query to message
 		message = self.client.beta.threads.messages.create(
 			thread_id=thread_id,
 			role="user",
 			content=query,
 		)
 
+		# runs thread on assistant
 		run = self.client.beta.threads.runs.create_and_poll(
 			thread_id=thread_id,
 			assistant_id=assistant_id,
 		)
 
+		# handles tool calls
 		while run.status == 'requires_action':
 			tool_outputs = self._execute_tools(run)
 			if tool_outputs:
-				run = self._submit_tools_and_get_run(run, tool_outputs, thread_id)
+				run = self.submit_tools_and_get_run(run, tool_outputs, thread_id)
 				self.output_handler("Tool outputs submitted successfully.")
 			else:
 				self.output_handler("No tool outputs to submit.")
 				break
+
+		while run.status != "completed":
+			print("Run status: " + run.status + "...")
 
 	def get_latest_message(self, thread_id):
 		try:
@@ -133,6 +161,16 @@ class OpenAIClient:
 			print(f"Deleted thread {thread_id}")
 		except Exception as e:
 			print(f"Error deleting thread: {e}")
+
+	def delete_vector_store(self, vector_store_id):
+		try:
+			deleted_vector_store = self.client.beta.vector_stores.delete(vector_store_id=vector_store_id)
+			if deleted_vector_store.deleted:
+				print(f"Deleted vector store {vector_store_id}")
+			else:
+				print(f"Failed to delete vector store {vector_store_id}")
+		except Exception as e:
+			print(f"Error deleting vector store: {e}")
 
 	def chat(self, 
 		  	 query, 

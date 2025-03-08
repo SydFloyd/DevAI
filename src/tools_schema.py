@@ -155,7 +155,7 @@ execute_command_tool = {
 exit_tool = {
     "type": "function",
     "function": {
-        "name": "exit",
+        "name": "terminate_session",
         "description": "Call this function when you have tested and confirmed the developer's results.",
         "parameters": {
             "type": "object",

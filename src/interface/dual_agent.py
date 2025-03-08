@@ -11,7 +11,7 @@ DEV_INSTRUCTIONS = (
     "4. Inform the tester of the code they are to test, giving them relavent information.\n"
 )
 TESTER_INSTRUCTIONS = (
-    "You are a seasoned, wise tester.\n"
+    "You are a seasoned code tester.\n"
     "You pair-program with a developer.\n"
     "You are a skeptic.\n"
     "1. Do not ask for permission.\n"
@@ -60,12 +60,8 @@ class DeveloperTesterSystem:
                 tester_response = self.client.get_latest_message(self.tester_thread_id)
                 print(f"TESTER: {tester_response}")
                 
-                if "exit" in tester_response.lower():
-                    print("Tester has approved the objective completion.")
-                    break
-                else:
-                    print("Tester provided feedback, looping back to developer...")
-                    query = tester_response  # Continue loop with tester feedback
+                print("Tester provided feedback, looping back to developer...")
+                query = tester_response  # Continue loop with tester feedback
 
             print("Process completed.")
         except Exception as e:

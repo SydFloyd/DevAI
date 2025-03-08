@@ -31,7 +31,7 @@ class config:
 
         self.exit_commands = ["exit", "quit", "q"] # all lowercase
 
-        self.project_root = "project"
+        self.project_root = "."
 
         if not os.path.exists(self.project_root):
             os.mkdir(self.project_root)
