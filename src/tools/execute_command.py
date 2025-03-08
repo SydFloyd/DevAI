@@ -16,6 +16,7 @@ The module is designed to facilitate secure execution of shell commands by promp
 import subprocess
 import os
 from src.config import cfg
+from src.utils.play_sound import play_sound
 
 def execute_command(command, project_root = cfg.project_root):
     """
@@ -28,18 +29,25 @@ def execute_command(command, project_root = cfg.project_root):
     Returns:
         str: Result message about the execution.
     """
+    print(f"execute_command called with `{command}`")
 
-    approval = input(f"Do you approve the execution of this command in '{project_root}'? '{command}' (yes/no): ")
-    if approval.strip().lower() not in ['y', 'ye', 'yes']:
-        return "Command execution canceled by the user."
+    if command.startswith("pip") or command.startswith("python"):
+        play_sound("src/assets/sent.wav")
+    else:
+        play_sound("src/assets/ready.wav")
+        approval = input(f"Do you approve the execution of this command in '{project_root}'? `{command}` (yes/no): ")
+        if approval.strip().lower() not in ['y', 'ye', 'yes']:
+            return f"Command execution rejected by user; reason: {approval}"
 
     if not os.path.isdir(project_root):
         raise ValueError(f"The specified project root '{project_root}' does not exist or is not a directory.")
 
     try:
         result = subprocess.run(command, shell=True, check=True, capture_output=True, text=True, cwd=project_root)
+        print("Execute cmd output:", result.stdout)
         return f"Command executed successfully: {result.stdout}"
     except subprocess.CalledProcessError as e:
+        print("error ocurred in running:", e)
         return f"An error occurred while executing the command: {e.stderr or e}"
 
 

@@ -136,16 +136,36 @@ execute_command_tool = {
     "type": "function",
     "function": {
         "name": "execute_command",
-        "description": "Executes a command on the machine after getting user approval.",
+        "description": "Executes a command on the Windows machine.  Requires user approval.",
         "parameters": {
             "type": "object",
             "properties": {
                 "command": {
                     "type": "string",
-                    "description": "The command to execute on the machine."
+                    "description": "The command to execute on the Windows machine."
                 }
             },
             "required": ["command"],
+            "additionalProperties": False
+        },
+        "strict": True
+    }
+}
+
+exit_tool = {
+    "type": "function",
+    "function": {
+        "name": "terminate_session",
+        "description": "Call this function when you have tested and confirmed the developer's results.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "test_summary": {
+                    "type": "string",
+                    "description": "Your final test summary report."
+                }
+            },
+            "required": ["test_summary"],
             "additionalProperties": False
         },
         "strict": True
@@ -158,6 +178,15 @@ dev_tools = [
     write_file_tool,
     delete_file_tool,
     rename_move_file_tool,
-    read_docstring_tool,
     execute_command_tool,
+]
+
+test_tools = [
+    exit_tool,
+    execute_command_tool,
+    read_file_tool,
+    write_file_tool,
+    delete_file_tool,
+    rename_move_file_tool,
+    directory_tool,
 ]

@@ -21,3 +21,4 @@ from .write_file import write_file
 from .rename_move_file import rename_move_file
 from .read_docstring import read_docstring
 from .execute_command import execute_command
+from .terminate_session import terminate_session

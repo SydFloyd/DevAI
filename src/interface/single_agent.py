@@ -17,87 +17,73 @@ Notable Dependencies/Imports:
 - `DocstringUpdater`: From `src.doc.auto_docstring`, used to update docstrings in the codebase.
 - `cfg`: From `src.config`, used for configuration settings such as API keys and project paths."""
 
+from src.utils.openai_utils import OpenAIClient
+from src.tools_schema import dev_tools
 from src.doc import auto_doc
 from src.config import cfg
-from src.utils.openai_utils import OpenAIClient
+
+SINGLE_AGENT_INSTRUCTIONS = (
+	"You are a 10x developer. You value simple elegant solutions.\n"
+	"You follow good coding practices.\n"
+)
 
 class SessionManager:
 	def __init__(self, input_handler=input, output_handler=print):
 		self.client = OpenAIClient(api_key=cfg.openai_api_key)
 		self.assistant_id = None
 		self.thread_id = None
+		self.vector_store = None
 		self.input_handler = input_handler
 		self.output_handler = output_handler
 	
-	def setup(self):
-		self.assistant_id = self.client.create_assistant()
-		self.assistant_id, vector_store = self.client.provide_assistant_files(self.assistant_id, ["docs.md"])
+	def _setup(self, use_vector_store=False):
+		# create assistant
+		self.assistant_id = self.client.create_assistant(
+			name=cfg.agent_name,
+			assistant_instructions=SINGLE_AGENT_INSTRUCTIONS,
+			tools=dev_tools
+		)
+
+		if use_vector_store:
+			assistant_id, vector_store = self.client.provide_assistant_files(self.assistant_id, ["docs.md"])
+			self.assistant_id = assistant_id
+			self.vector_store = vector_store
+
+		# create Thread
 		thread = self.client.client.beta.threads.create()
 		self.thread_id = thread.id
-		return vector_store
 
-	def interact(self):
+	def _interact(self):
 		while True:
 			query = self.input_handler(f"\n{cfg.agent_name}>> ")
 			if query.strip().lower() in cfg.exit_commands:
 				return True
 			request = cfg.get_sys_message() + query
-			message = self.client.client.beta.threads.messages.create(
-				thread_id=self.thread_id,
-				role="user",
-				content=request,
-			)
-
-			run = self.client.client.beta.threads.runs.create_and_poll(
-				thread_id=self.thread_id,
-				assistant_id=self.assistant_id,
-			)
-
-			while run.status == 'requires_action':
-				tool_outputs = self.client.execute_tools(run)
-				if tool_outputs:
-					run = self.client.submit_tools_and_get_run(run, tool_outputs, self.thread_id)
-					self.output_handler("Tool outputs submitted successfully.")
-				else:
-					self.output_handler("No tool outputs to submit.")
-					break
+			self.client.run_thread(request, self.thread_id, self.assistant_id)
 			
-			self.output_messages(run)
+			response = self.client.get_latest_message(self.thread_id)
+			self.output_handler("Response:", response)
 			return False
+		
+	def start_session(self):
+		use_vector_store = False
+		update_docs = self.input_handler("Regenerate documentation? (y/n)")
+		if update_docs.lower().strip() == "y":
+			auto_doc(cfg.project_root, update_file_docstrings=True)
+			use_vector_store = True
+		self._setup(use_vector_store=use_vector_store)
 
-	def output_messages(self, run):
-		if run.status == 'completed':
-			messages = self.client.client.beta.threads.messages.list(thread_id=self.thread_id)
-			for message in messages:
-				self.output_handler(message.role + ":")
-				for c in message.content:
-					self.output_handler(c.text.value)
-				break
-		else:
-			self.output_handler(run.status)
+		try:
+			while True:
+				exit_interaction = self._interact()
+				if exit_interaction:
+					break
+		finally:
+			self.teardown()
 
 	def teardown(self, vector_store):
 		self.client.delete_assistant(self.assistant_id)
-		self.client.delete_vector_store(vector_store)
+		self.client.delete_thread(self.thread_id)
+		if self.vector_store is not None:
+			self.client.delete_vector_store(self.vector_store)
 		self.output_handler("Session ended.\n")
-
-
-def main():
-	update_docs = input("Regenerate documentation? (y/n)")
-	if update_docs.lower().strip() == "y":
-		auto_doc(cfg.project_root, update_file_docstrings=True)
-
-	manager = SessionManager()
-	vector_store = manager.setup()
-
-	try:
-		while True:
-			exit_interaction = manager.interact()
-			if exit_interaction:
-				break
-	finally:
-		manager.teardown(vector_store)
-
-
-if __name__ == "__main__":
-	main()
